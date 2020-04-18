@@ -3,23 +3,23 @@
 //
 
 #include "mylibrary/table.h"
-class Table {
-    int posX, posY;
-    /*
-    Texture background;
-    Rect r[6] {};  // Rect colliders for walls
-    Ball b[12] {}; // Ball colliders to simulate pocket sides
-    SDL_Point pocket_sensors[6] {}; // Check if ball in the pocket
-    */
-public:
-    //Table(CollisionObserver* c = nullptr);
+#include <cinder/app/App.h>
+#include <Box2D/Box2D.h>
+#include <cinder/app/App.h>
+#include <cinder/gl/gl.h>
 
-    void render();
-    //bool is_pocketed(const Ball& b);
+using namespace cinder;
+namespace myapp {
 
-    //double  getWidth() const noexcept {return background.getWidth(); }
-    //double getHeight() const noexcept {return background.getHeight();}
-    int         getX() const noexcept {return posX;}
-    int         getY() const noexcept {return posY;}
-};
+    void Table::setTexture() {
+        auto img = cinder::loadImage(cinder::app::loadAsset("table.png"));
+        texture_ = cinder::gl::Texture2d::create(img);
+    }
 
+    void Table::draw() {
+        cinder::Area area = texture_->getBounds();
+        cinder::Area bound = app::getWindowBounds();
+        cinder::Area fit = Area::proportionalFit(area, bound, true, false);
+        cinder::gl::draw(texture_, fit);
+    }
+}

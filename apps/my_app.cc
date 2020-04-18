@@ -8,11 +8,14 @@
 #include <cinder/Vector.h>
 #include <cinder/gl/draw.h>
 #include <cinder/gl/gl.h>
+#include <cinder/gl/draw.h>
 #include <cinder/audio/Source.h>
 #include <cinder/audio/Utilities.h>
 #include <cinder/audio/audio.h>
 #include "cinder/app/RendererGl.h"
 #include "cinder/Log.h"
+#include <cinder/Font.h>
+#include <cinder/Text.h>
 
 namespace myapp {
 
@@ -34,18 +37,17 @@ MyApp::MyApp() {}
 void MyApp::setup() {
     cinder::gl::enableDepthWrite();
     cinder::gl::enableDepthRead();
-    auto img = cinder::loadImage( cinder::app::loadAsset("table.png") );
-    texture_ = cinder::gl::Texture2d::create( img );
+    game_.setup();
+    game_.setTexture();
 }
 
 void MyApp::update() { }
 
 void MyApp::draw() {
+    gl::enableAlphaBlending();
     cinder::gl::clear();
-    cinder::Area area = texture_->getBounds();
-    cinder::Area bound = getWindowBounds();
-    cinder::Area fit = Area::proportionalFit(area, bound, true, false);
-    cinder::gl::draw(texture_, fit);
+    game_.draw();
+    gl::disableAlphaBlending();
 }
 
 void MyApp::keyDown(KeyEvent event) { }

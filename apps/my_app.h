@@ -7,6 +7,8 @@
 #include <Box2D/Box2D.h>
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
+#include "mylibrary/table.h"
+#include "mylibrary/game.h"
 
 namespace myapp {
 
@@ -17,7 +19,9 @@ class MyApp : public cinder::app::App {
   void update() override;
   void draw() override;
   void keyDown(cinder::app::KeyEvent) override;
+
 private:
+    myapp::Game game_;
     cinder::gl::Texture2dRef texture_;
 };
 
