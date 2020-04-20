@@ -9,15 +9,22 @@
 #include <Box2D/Box2D.h>
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
+#include "body.h"
+
+using namespace cinder;
 
 namespace myapp {
-    class Cue {
+
+    class Cue : Body {
     public:
-        void setTexture();
+        Cue(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
         void render();
         void draw();
+        void setPosition( const ci::vec2 &pos );
+        vec2 getPos() const;
+        double GetWidth() {return texture_->getWidth();}
+        double GetHeight() {return texture_->getHeight();}
     private:
-        cinder::gl::Texture2dRef texture_;
 
     };
 }

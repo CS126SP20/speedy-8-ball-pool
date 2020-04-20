@@ -10,6 +10,9 @@
 #include "mylibrary/table.h"
 #include "mylibrary/game.h"
 
+using namespace ci;
+using namespace ci::app;
+
 namespace myapp {
 
 class MyApp : public cinder::app::App {
@@ -19,6 +22,9 @@ class MyApp : public cinder::app::App {
   void update() override;
   void draw() override;
   void keyDown(cinder::app::KeyEvent) override;
+  void mouseDown( MouseEvent event ) override;
+  void mouseDrag( MouseEvent event ) override;
+  void mouseUp( MouseEvent event ) override;
 
 private:
     myapp::Game game_;

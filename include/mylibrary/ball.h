@@ -11,34 +11,29 @@
 #include <Box2D/Box2D.h>
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
+#include "body.h"
+
+
 using namespace cinder;
 namespace myapp {
-    struct Circle {
-        double pos_x;
-        double pos_y;
-        double radius;
-    };
 
-    class Ball {
+    class Ball : Body {
     public:
         // not movable if it is opposite type of current player
         bool is_movable = true;
         // whether or not it is hit into hole
         bool is_visible = true;
-
-        Circle data;
-        cinder::gl::TextureRef texture_;
-
         // the number of the ball
-        int id = 0;
+        int id_ = 0;
 
         Ball();
+        void draw() override;
         // pass in file name
-        Ball(int id);
+        Ball(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
+        void setPosition( const ci::vec2 &pos );
+        vec2 getPos() const;
 
-        void draw();
-        void setTexture(const std::string& path);
-        void setPos(double x, double y);
+        void setId(int id);
         void setVel(double x_vel, double y_vel);
 
         bool is_moving();

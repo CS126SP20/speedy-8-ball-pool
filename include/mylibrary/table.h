@@ -8,7 +8,7 @@
 #include <Box2D/Box2D.h>
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
-
+using namespace cinder;
 namespace myapp {
     class Table {
         int posX, posY;
@@ -27,8 +27,8 @@ namespace myapp {
         void draw();
         //bool is_pocketed(const Ball& b);
 
-        //double  getWidth() const noexcept {return background.getWidth(); }
-        //double getHeight() const noexcept {return background.getHeight();}
+        double  getWidth() const noexcept {return app::getWindowWidth(); }
+        double getHeight() const noexcept {return app::getWindowHeight();}
         int         getX() const noexcept {return posX;}
         int         getY() const noexcept {return posY;}
     };

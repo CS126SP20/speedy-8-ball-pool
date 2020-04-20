@@ -35,19 +35,34 @@ using namespace cinder;
 MyApp::MyApp() {}
 
 void MyApp::setup() {
-    cinder::gl::enableDepthWrite();
-    cinder::gl::enableDepthRead();
     game_.setup();
-    game_.setTexture();
+    //game_.setTexture();
 }
 
-void MyApp::update() { }
+void MyApp::update() {
+    game_.update();
+}
 
 void MyApp::draw() {
-    gl::enableAlphaBlending();
     cinder::gl::clear();
+    gl::enableAlphaBlending();
     game_.draw();
-    gl::disableAlphaBlending();
+
+}
+void MyApp::mouseDown( MouseEvent event )
+{
+    game_.cue_->setPosition(event.getPos());
+    //mScene.addGear( event.getPos() );
+}
+
+void MyApp::mouseDrag( MouseEvent event )
+{
+    game_.cue_->setPosition(event.getPos());
+    //mScene.addGear( event.getPos() );
+}
+
+void MyApp::mouseUp( MouseEvent event )
+{
 }
 
 void MyApp::keyDown(KeyEvent event) { }
