@@ -21,6 +21,7 @@ namespace myapp {
     class Game : public b2ContactListener {
 
     public:
+        virtual ~Game();
         BodyRef	makeBodyShared( b2World *world, const b2BodyDef &bodyDef );
         //typedef std::vector<std::shared_ptr<Wall> >		WallContainerT;
         typedef std::vector<std::shared_ptr<Ball> >		BallContainerT;
@@ -29,6 +30,7 @@ namespace myapp {
         void setup();
         void draw();
         void update();
+        void CueHit();
         std::shared_ptr<Cue> cue_;
     private:
         Table table_;

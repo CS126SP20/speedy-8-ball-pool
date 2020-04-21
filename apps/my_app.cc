@@ -51,18 +51,19 @@ void MyApp::draw() {
 }
 void MyApp::mouseDown( MouseEvent event )
 {
-    game_.cue_->setPosition(event.getPos());
+   // game_.cue_->setPosition(event.getPos());
     //mScene.addGear( event.getPos() );
 }
 
 void MyApp::mouseDrag( MouseEvent event )
 {
-    game_.cue_->setPosition(event.getPos());
+   // game_.cue_->setPosition(event.getPos());
     //mScene.addGear( event.getPos() );
 }
 
 void MyApp::mouseUp( MouseEvent event )
 {
+    game_.CueHit();
 }
 
 void MyApp::keyDown(KeyEvent event) { }

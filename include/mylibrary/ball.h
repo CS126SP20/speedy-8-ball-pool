@@ -29,7 +29,7 @@ namespace myapp {
         Ball();
         void draw() override;
         // pass in file name
-        Ball(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
+        Ball(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos, float radius);
         void setPosition( const ci::vec2 &pos );
         vec2 getPos() const;
 
@@ -40,6 +40,8 @@ namespace myapp {
 
         static bool is_solid(int num) {return num > 0 && num < 8;}
         static bool is_stripes(int num) {return num > 8 && num < 16;}
+    private:
+        float radius_;
     };
 }
 

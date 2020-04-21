@@ -24,6 +24,7 @@ namespace myapp {
         vec2 getPos() const;
         double GetWidth() {return texture_->getWidth();}
         double GetHeight() {return texture_->getHeight();}
+        void ApplyForce();
     private:
 
     };
