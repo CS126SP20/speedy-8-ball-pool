@@ -20,6 +20,7 @@ namespace myapp {
         Cue(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
         void render();
         void draw();
+        void handleCollision( const BodyRef body, const ci::vec2 &contactPoint ) override;
         void setPosition( const ci::vec2 &pos );
         vec2 getPos() const;
         double GetWidth() {return texture_->getWidth();}

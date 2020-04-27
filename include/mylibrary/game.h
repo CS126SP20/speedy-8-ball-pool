@@ -23,10 +23,13 @@ namespace myapp {
     public:
         virtual ~Game();
         BodyRef	makeBodyShared( b2World *world, const b2BodyDef &bodyDef );
-        //typedef std::vector<std::shared_ptr<Wall> >		WallContainerT;
+        typedef std::vector<std::shared_ptr<Wall> >		WallContainerT;
         typedef std::vector<std::shared_ptr<Ball> >		BallContainerT;
         b2World* getWorld() const		{ return world_.get(); }
         const BallContainerT& getBalls() const	{ return balls_; }
+        void setBalls();
+        void setCue();
+        void setTable();
         void setup();
         void draw();
         void update();
@@ -35,6 +38,7 @@ namespace myapp {
     private:
         Table table_;
         std::vector<std::shared_ptr<Ball>> balls_;
+        std::vector<std::shared_ptr<Wall>> walls_;
         std::unique_ptr<b2World> world_;
         float mLastStepTime, mCurrentDecent;
 

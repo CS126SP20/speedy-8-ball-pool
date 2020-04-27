@@ -28,6 +28,7 @@ namespace myapp {
 
         Ball();
         void draw() override;
+        void handleCollision( const BodyRef body, const ci::vec2 &contactPoint ) override;
         // pass in file name
         Ball(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos, float radius);
         void setPosition( const ci::vec2 &pos );

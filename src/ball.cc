@@ -58,6 +58,9 @@ namespace myapp {
         gl::draw(texture_, centerImage);
          */
     }
+    void Ball::handleCollision( const BodyRef body, const ci::vec2 &contactPoint ) {
+
+    }
 /*
     bool Ball::isCollidingWith( Ball other )
     {

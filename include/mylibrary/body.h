@@ -10,6 +10,7 @@
 #include <cinder/app/App.h>
 #include <cinder/gl/gl.h>
 #include <cinder/gl/draw.h>
+//#include "ball.h"
 
 using namespace cinder;
 
@@ -19,6 +20,7 @@ namespace myapp {
     protected:
         Body(BodyRef body, gl::Texture2dRef texture, vec2 pos);
         virtual void draw() = 0;
+        virtual void handleCollision( const BodyRef body, const ci::vec2 &contactPoint ) = 0;
     public:
         BodyRef body_;
         cinder::gl::Texture2dRef texture_;
