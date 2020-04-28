@@ -34,16 +34,6 @@ namespace myapp {
         setCue();
         setBalls();
 
-/*
-        b2FrictionJointDef frictionJointDef;
-        frictionJointDef.maxForce = 10000000;
-        frictionJointDef.maxTorque = 0000000;
-        for (auto ball : balls_) {
-            frictionJointDef.Initialize(table_->body_, ball, vec2(0, 0));
-        }
-        world_->CreateJoint(frictionJointDef);
-*/
-
     }
     void Game::setBalls() {
         // set cue ball
@@ -62,15 +52,15 @@ namespace myapp {
         vec2 pos1 = Box2DUtility::pointsToMeters(pos0);
         b2body.position.Set(pos1.x, pos1.y);
         b2body.linearVelocity = b2Vec2(0, 0);
-
+        b2body.linearDamping = 0.8f;
+        b2body.angularDamping = 0.8f;
         auto body = makeBodyShared(world_.get(), b2body);
 
         b2CircleShape shape;
-
         shape.m_radius = Box2DUtility::pointsToMeters(radius);
         b2FixtureDef fixture;
         fixture.shape = &shape;
-        fixture.density = 10.0f;
+        fixture.density = 500.0f;
         fixture.friction = 1000000.0f;
         fixture.restitution = 0.5f;
         body->CreateFixture(&fixture);
@@ -101,8 +91,8 @@ namespace myapp {
                 vec2 pos = Box2DUtility::pointsToMeters(pos_pt);
                 b2body.position.Set(pos.x, pos.y);
                 b2body.linearVelocity = b2Vec2(0, 0);
-                //b2body.linearDamping = 0.0f;
-                //b2body.angularDamping = 0.01f;
+                b2body.linearDamping = 0.8f;
+                b2body.angularDamping = 0.8f;
                 //b2body.linearVelocity = b2Vec2(i%2 == 0 ? -1 : 1, 0);
                 auto body = makeBodyShared(world_.get(), b2body);
 
@@ -110,7 +100,7 @@ namespace myapp {
                 shape.m_radius = Box2DUtility::pointsToMeters(radius);
                 b2FixtureDef fixture;
                 fixture.shape = &shape;
-                fixture.density = 10.0f;
+                fixture.density = 500.0f;
                 fixture.friction = 5.0f;
                 fixture.restitution = 0.5f;
                 body->CreateFixture(&fixture);
