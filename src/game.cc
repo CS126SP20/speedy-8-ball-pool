@@ -34,6 +34,16 @@ namespace myapp {
         setCue();
         setBalls();
 
+/*
+        b2FrictionJointDef frictionJointDef;
+        frictionJointDef.maxForce = 10000000;
+        frictionJointDef.maxTorque = 0000000;
+        for (auto ball : balls_) {
+            frictionJointDef.Initialize(table_->body_, ball, vec2(0, 0));
+        }
+        world_->CreateJoint(frictionJointDef);
+*/
+
     }
     void Game::setBalls() {
         // set cue ball
@@ -61,7 +71,7 @@ namespace myapp {
         b2FixtureDef fixture;
         fixture.shape = &shape;
         fixture.density = 10.0f;
-        fixture.friction = 5.0f;
+        fixture.friction = 1000000.0f;
         fixture.restitution = 0.5f;
         body->CreateFixture(&fixture);
 
@@ -91,6 +101,8 @@ namespace myapp {
                 vec2 pos = Box2DUtility::pointsToMeters(pos_pt);
                 b2body.position.Set(pos.x, pos.y);
                 b2body.linearVelocity = b2Vec2(0, 0);
+                //b2body.linearDamping = 0.0f;
+                //b2body.angularDamping = 0.01f;
                 //b2body.linearVelocity = b2Vec2(i%2 == 0 ? -1 : 1, 0);
                 auto body = makeBodyShared(world_.get(), b2body);
 
@@ -123,6 +135,7 @@ namespace myapp {
         b2BodyDef b2body1;
         b2body1.type = b2_kinematicBody;
         vec2 pos_pt(texture->getWidth() - 1, center.y - texture->getHeight()/2);
+        //vec2 pos_pt(0, center.y - texture->getHeight()/2);
         auto pos = Box2DUtility::pointsToMeters(pos_pt);
 
         b2body1.position.Set(pos.x, pos.y);
@@ -130,6 +143,14 @@ namespace myapp {
 
         auto body1 = makeBodyShared(world_.get(), b2body1);
         //const float radius = 0.2;
+
+        /*
+         * b2PolygonShape polygonShape;
+          polygonShape.SetAsBox( 0.5f, 1.25f );
+          m_body->CreateFixture(&polygonShape, 1);
+         */
+       // b2PolygonShape shape0;
+        //shape0.SetAsBox(texture->getWidth(), texture->getHeight());
 
         b2CircleShape shape0;
         shape0.m_radius = 0.01f;
@@ -143,8 +164,27 @@ namespace myapp {
     }
 
     void Game::setTable() {
-        table_.setTexture();
-        //table_.SetPockets();
+        auto img = cinder::loadImage(cinder::app::loadAsset("table.png"));
+        gl::TextureRef texture = cinder::gl::Texture2d::create(img);
+        b2BodyDef body_table;
+        body_table.position.Set(0, 0);
+        body_table.type = b2_staticBody;
+        body_table.linearDamping = 0.0f;
+        body_table.angularDamping = 0.01f;
+        body_table.active = false;
+        auto body = makeBodyShared(world_.get(), body_table);
+        b2PolygonShape fShape;
+        fShape.SetAsBox(texture->getWidth(), texture->getHeight());
+        b2FixtureDef fixDef;
+        fixDef.shape = &fShape;
+        fixDef.density = 1.f;
+        fixDef.friction = 1000000.0f;
+        body->CreateFixture(&fixDef);
+
+        auto pos = Box2DUtility::pointsToMeters(vec2(0, 0));
+        table_ = std::shared_ptr<Table>(new Table(body, texture, pos));
+        //table_->setTexture();
+        table_->SetPockets();
         // set walls
         vec2 center_meters = Box2DUtility::pointsToMeters( vec2( app::getWindowCenter() ) );
         float inset = Box2DUtility::pointsToMeters(app::getWindowWidth() - 85);
@@ -267,7 +307,7 @@ namespace myapp {
     }
     void Game::draw() {
 
-        table_.draw();
+        table_->draw();
         /*
         for (auto& p : table_.pockets_)
         {
@@ -276,7 +316,7 @@ namespace myapp {
         }
          */
         for (auto ball : balls_) {
-            if (table_.is_pocketed(ball))
+            if (table_->is_pocketed(ball))
             {
                 ball->is_visible = false;
                 //balls_.erase(std::remove(balls_.begin(), balls_.end(), ball), balls_.end());

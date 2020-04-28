@@ -40,7 +40,7 @@ namespace myapp {
         void CueRecoil();
         std::shared_ptr<Cue> cue_;
     private:
-        Table table_;
+        std::shared_ptr<Table> table_;
         std::vector<std::shared_ptr<Ball>> balls_;
         std::vector<std::shared_ptr<Ball>> scored_balls_;
         std::vector<std::shared_ptr<Wall>> walls_;

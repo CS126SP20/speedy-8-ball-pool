@@ -29,6 +29,12 @@ namespace myapp {
         gl::drawSolidRect( wallRect );
 
     }
+    Table::Table(myapp::BodyRef body, cinder::gl::TextureRef texture_, vec2 pos)
+        : Body(body, texture_, pos)
+        {
+            body_->SetUserData(this);
+            //SetPockets();
+    }
     void Table::setTexture() {
         auto img = cinder::loadImage(cinder::app::loadAsset("table.png"));
         texture_ = cinder::gl::Texture2d::create(img);
@@ -73,5 +79,7 @@ namespace myapp {
         }
 
         return false;
+    }
+    void Table::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
     }
 }

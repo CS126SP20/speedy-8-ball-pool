@@ -20,10 +20,10 @@ namespace myapp {
         float width_;
         enum class Side	{ LEFT, RIGHT, TOP, BOTTOM } mSide;
     };
-    class Table {
+    class Table : Body {
     private:
         int mMin_ = 0;
-        void SetPockets();
+
         /*
         Texture background;
         Rect r[6] {};  // Rect colliders for walls
@@ -31,9 +31,11 @@ namespace myapp {
         SDL_Point pocket_sensors[6] {}; // Check if ball in the pocket
         */
     public:
+        Table(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
         std::vector<vec2> pockets_;
-
-        cinder::gl::Texture2dRef texture_;
+        void handleCollision(Ball *ball, const ci::vec2 &contactPoint );
+        //cinder::gl::Texture2dRef texture_;
+        void SetPockets();
         //Table();
         void setTexture();
         void render();
