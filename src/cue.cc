@@ -31,7 +31,6 @@ namespace myapp {
 
         float conversion = Box2DUtility::getPointsPerMeter();
         vec2 pos = vec2( body_->GetPosition().x, body_->GetPosition().y ) * conversion;
-        pos.x -= texture_->getWidth();
         float t = body_->GetAngle();
         Area destRect = texture_->getBounds();
         gl::ScopedModelMatrix modelScope;

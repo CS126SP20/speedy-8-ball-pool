@@ -124,25 +124,20 @@ namespace myapp {
         vec2 center = app::getWindowCenter();
         b2BodyDef b2body1;
         b2body1.type = b2_kinematicBody;
-        vec2 pos_pt(texture->getWidth() - 1, center.y - texture->getHeight()/2);
-        //vec2 pos_pt(0, center.y - texture->getHeight()/2);
+        //vec2 pos_pt(texture->getWidth() - 1, center.y - texture->getHeight()/2);
+        vec2 pos_pt(-1, center.y - texture->getHeight()/2);
         auto pos = Box2DUtility::pointsToMeters(pos_pt);
 
         b2body1.position.Set(pos.x, pos.y);
         b2body1.linearVelocity = b2Vec2(0, 0);
 
         auto body1 = makeBodyShared(world_.get(), b2body1);
-        //const float radius = 0.2;
 
-        /*
-         * b2PolygonShape polygonShape;
-          polygonShape.SetAsBox( 0.5f, 1.25f );
-          m_body->CreateFixture(&polygonShape, 1);
-         */
-       // b2PolygonShape shape0;
-        //shape0.SetAsBox(texture->getWidth(), texture->getHeight());
+        b2PolygonShape shape0;
+        auto x = Box2DUtility::pointsToMeters(texture->getWidth());
+        auto y = Box2DUtility::pointsToMeters(texture->getHeight());
+        shape0.SetAsBox(x , y);
 
-        b2CircleShape shape0;
         shape0.m_radius = 0.01f;
         b2FixtureDef fixture0;
         fixture0.shape = &shape0;
@@ -173,7 +168,6 @@ namespace myapp {
 
         auto pos = Box2DUtility::pointsToMeters(vec2(0, 0));
         table_ = std::shared_ptr<Table>(new Table(body, texture, pos));
-        //table_->setTexture();
         table_->SetPockets();
         // set walls
         vec2 center_meters = Box2DUtility::pointsToMeters( vec2( app::getWindowCenter() ) );
@@ -195,7 +189,6 @@ namespace myapp {
         leftWallFixture.restitution = 0.5f;
         body1->CreateFixture(&leftWallFixture);
         auto wall = std::shared_ptr<Wall>(new Wall(body1));
-        wall->mSide = Wall::Side::LEFT;
         wall->width_ = 0;
         walls_.push_back(wall);
 
@@ -214,7 +207,6 @@ namespace myapp {
         rightWallFixture.restitution = 0.5f;
         body2->CreateFixture(&rightWallFixture);
         auto wall2 = std::shared_ptr<Wall>(new Wall(body2));
-        wall2->mSide = Wall::Side::RIGHT;
         wall2->width_ = 0;
         walls_.push_back(wall2);
 
@@ -234,7 +226,6 @@ namespace myapp {
         topWallFixture.restitution = 0.5f;
         body3->CreateFixture(&topWallFixture);
         auto wall3 = std::shared_ptr<Wall>(new Wall(body3));
-        wall3->mSide = Wall::Side::TOP;
         wall3->width_ = 0;
         walls_.push_back(wall3);
 
@@ -254,7 +245,6 @@ namespace myapp {
         bottomWallFixture.restitution = 0.5f;
         body4->CreateFixture(&bottomWallFixture);
         auto wall4 = std::shared_ptr<Wall>(new Wall(body4));
-        wall4->mSide = Wall::Side::BOTTOM;
         wall4->width_ = 0;
         walls_.push_back(wall4);
 
