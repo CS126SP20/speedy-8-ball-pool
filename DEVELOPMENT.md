@@ -20,6 +20,6 @@
   - need to set rotating ability by mouse tracking
   - need to added power bar so speed is adjustable
   
- - **4/27/2020** Added pockets so that the balls disappear when they are hit in.
+- **4/27/2020** Added pockets so that the balls disappear when they are hit in.
   - need to fix the positioning a bit because it is still inaccurate
   - need to get the cue rotating, still not working properly and by user clicking
