@@ -17,7 +17,7 @@
 using namespace cinder;
 namespace myapp {
 
-    class Ball : Body {
+    class Ball : public Body {
     public:
         // not movable if it is opposite type of current player
         bool is_movable = true;
@@ -28,12 +28,13 @@ namespace myapp {
 
         Ball();
         void draw() override;
-        void handleCollision( const BodyRef body, const ci::vec2 &contactPoint ) override;
+        void destroy() {body_->SetActive(false);}
+        void handleCollision(Ball *ball, const ci::vec2 &contactPoint ) override;
         // pass in file name
         Ball(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos, float radius);
         void setPosition( const ci::vec2 &pos );
         vec2 getPos() const;
-
+        float getRadius() {return radius_;}
         void setId(int id);
         void setVel(double x_vel, double y_vel);
 

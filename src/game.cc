@@ -11,6 +11,9 @@
 #include <cmath>
 #include <string>
 #include "mylibrary/box2d_utility.h"
+#include "cinder/Log.h"
+#include "cinder/Rand.h"
+#include "cinder/CinderAssert.h"
 
 using namespace cinder;
 
@@ -108,6 +111,7 @@ namespace myapp {
             px -= radius * std::sqrt(3);
             py += radius;
         }
+
     }
     void Game::setCue() {
         // set cue
@@ -126,8 +130,9 @@ namespace myapp {
 
         auto body1 = makeBodyShared(world_.get(), b2body1);
         //const float radius = 0.2;
+
         b2CircleShape shape0;
-        shape0.m_radius = 0.2f;
+        shape0.m_radius = 0.01f;
         b2FixtureDef fixture0;
         fixture0.shape = &shape0;
         fixture0.density = 1.0f;
@@ -139,6 +144,7 @@ namespace myapp {
 
     void Game::setTable() {
         table_.setTexture();
+        //table_.SetPockets();
         // set walls
         vec2 center_meters = Box2DUtility::pointsToMeters( vec2( app::getWindowCenter() ) );
         float inset = Box2DUtility::pointsToMeters(app::getWindowWidth() - 85);
@@ -203,7 +209,7 @@ namespace myapp {
         walls_.push_back(wall3);
 
 
-        float bottom = Box2DUtility::pointsToMeters(app::getWindowHeight() - 525);
+        float bottom = Box2DUtility::pointsToMeters(app::getWindowHeight() - 530);
         b2BodyDef bodyDef4;
         bodyDef4.position.Set(center_meters.x, bottom);
         bodyDef4.type = b2_staticBody;
@@ -231,15 +237,47 @@ namespace myapp {
 
         mLastStepTime = currentTime;
     }
+    void Game::BeginContact( b2Contact* contact ) {
+        void *userDataA = contact->GetFixtureA()->GetBody()->GetUserData();
+        void *userDataB = contact->GetFixtureB()->GetBody()->GetUserData();
+
+        CI_ASSERT( userDataA && userDataB );
+
+        b2WorldManifold worldManifold;
+        contact->GetWorldManifold( &worldManifold );
+
+        vec2 contactPoint = Box2DUtility::metersToPoints( Box2DUtility::toCinder( worldManifold.points[0] ) );
+
+        Body *objectA = static_cast<Body *>( userDataA );
+        Body *objectB = static_cast<Body *>( userDataB );
+
+        if( typeid( *objectA ) == typeid( Cue ) )
+            handleCueCollision(dynamic_cast<Cue *>( objectA ), objectB, contactPoint );
+    }
+    void Game::handleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint) {
+        Ball *ball = dynamic_cast<Ball *>( body );
+        if(ball != NULL && ball->is_visible)
+            cue->handleCollision(ball, contactPoint );
+    }
     void Game::CueHit() {
         cue_->ApplyForce();
     }
     void Game::draw() {
 
         table_.draw();
-
+        for (auto& p : table_.pockets_)
+        {
+            double r = 10;
+            cinder::gl::drawSolidCircle(p + cinder::vec2(r, r), r );
+        }
         for (auto ball : balls_) {
-            ball->draw();
+            if (table_.is_pocketed(ball))
+            {
+                ball->is_visible = false;
+                //balls_.erase(std::remove(balls_.begin(), balls_.end(), ball), balls_.end());
+            }
+            else
+                ball->draw();
         }
         cue_->draw();
 

@@ -4,6 +4,7 @@
 
 #include "mylibrary/cue.h"
 #include "mylibrary/box2d_utility.h"
+#include "mylibrary/ball.h"
 
 using namespace cinder;
 using namespace cinder::gl;
@@ -12,7 +13,7 @@ namespace myapp {
     Cue::Cue(BodyRef body, cinder::gl::TextureRef texture, vec2 pos)
             : Body(body, texture, pos)
     {
-        body_->SetUserData(this->body_.get());
+        body_->SetUserData(this);
     }
 
     void Cue::setPosition( const ci::vec2 &pos )
@@ -52,7 +53,12 @@ namespace myapp {
         body_->SetLinearVelocity(b2Vec2(5*dir, 0));
         dir = dir* -1;
     }
-    void Cue::handleCollision( const BodyRef body, const ci::vec2 &contactPoint ) {
-
+    void Cue::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
+        body_->SetLinearVelocity(b2Vec2(0, 0));
+        b2Vec2 pos = b2Vec2(body_->GetPosition().x, body_->GetPosition().y);
+        //body_->ApplyForce(b2Vec2(10, 0), pos);
+        ball->handleCollision(ball, contactPoint);
+        //ball->GetBody()->SetLinearVelocity(b2Vec2(10, 0));
+        //ApplyForce();
     }
 }

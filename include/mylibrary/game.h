@@ -8,7 +8,8 @@
 
 //ci::vec2 toCinder( const b2Vec2 &vec );
 //ci::Color toCinder( const b2Color &color );
-
+#include <Box2D/Box2D.h>
+#include <memory>
 #include "table.h"
 #include "ball.h"
 #include "cue.h"
@@ -27,6 +28,8 @@ namespace myapp {
         typedef std::vector<std::shared_ptr<Ball> >		BallContainerT;
         b2World* getWorld() const		{ return world_.get(); }
         const BallContainerT& getBalls() const	{ return balls_; }
+        void handleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint);
+        void BeginContact( b2Contact* contact );
         void setBalls();
         void setCue();
         void setTable();
@@ -38,6 +41,7 @@ namespace myapp {
     private:
         Table table_;
         std::vector<std::shared_ptr<Ball>> balls_;
+        std::vector<std::shared_ptr<Ball>> scored_balls_;
         std::vector<std::shared_ptr<Wall>> walls_;
         std::unique_ptr<b2World> world_;
         float mLastStepTime, mCurrentDecent;

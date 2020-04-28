@@ -15,13 +15,15 @@ using namespace cinder;
 namespace myapp {
     struct Wall : Body {
         Wall(BodyRef body);
-        void handleCollision( const BodyRef body, const ci::vec2 &contactPoint ) override;
+        void handleCollision(Ball *ball, const ci::vec2 &contactPoint ) override;
         void draw() override;
         float width_;
         enum class Side	{ LEFT, RIGHT, TOP, BOTTOM } mSide;
     };
     class Table {
-        int posX, posY;
+    private:
+        int mMin_ = 0;
+        void SetPockets();
         /*
         Texture background;
         Rect r[6] {};  // Rect colliders for walls
@@ -29,18 +31,18 @@ namespace myapp {
         SDL_Point pocket_sensors[6] {}; // Check if ball in the pocket
         */
     public:
+        std::vector<vec2> pockets_;
 
         cinder::gl::Texture2dRef texture_;
         //Table();
         void setTexture();
         void render();
         void draw();
-        //bool is_pocketed(const Ball& b);
+
+        bool is_pocketed(std::shared_ptr<Ball> b);
 
         double  getWidth() const noexcept {return texture_->getWidth(); }
         double getHeight() const noexcept {return app::getWindowHeight();}
-        int         getX() const noexcept {return posX;}
-        int         getY() const noexcept {return posY;}
     };
 }
 
