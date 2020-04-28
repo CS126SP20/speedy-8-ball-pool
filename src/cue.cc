@@ -53,6 +53,16 @@ namespace myapp {
         body_->SetLinearVelocity(b2Vec2(5*dir, 0));
         dir = dir* -1;
     }
+    void Cue::Recoil() {
+        static float dir = -1;
+        b2Vec2 pos = b2Vec2(body_->GetPosition().x, body_->GetPosition().y);
+        //pos.x -= texture_->getWidth();
+        //gl::ScopedModelMatrix modelScope;
+        //gl::translate( pos );
+        //body_->ApplyForce(b2Vec2(0, 0), pos);
+        body_->SetLinearVelocity(b2Vec2(5*dir, 0));
+        dir = dir* -1;
+    }
     void Cue::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
         body_->SetLinearVelocity(b2Vec2(0, 0));
         b2Vec2 pos = b2Vec2(body_->GetPosition().x, body_->GetPosition().y);

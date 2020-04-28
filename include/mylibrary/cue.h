@@ -26,6 +26,7 @@ namespace myapp {
         double GetWidth() {return texture_->getWidth();}
         double GetHeight() {return texture_->getHeight();}
         void ApplyForce();
+        void Recoil();
     private:
 
     };

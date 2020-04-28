@@ -46,15 +46,15 @@ namespace myapp {
         auto posX = (app::getWindowWidth() - texture_->getWidth()) / 2;
         float right = app::getWindowWidth() - 100.0f;
         float left = app::getWindowWidth() - 710.0f;
-        float top = app::getWindowHeight() - 235.0f;
+        float top = app::getWindowHeight() - 230.0f;
         float bottom = app::getWindowHeight() - 525.0f;
 
         pockets_.push_back(vec2(left, bottom)); // bottom left
         pockets_.push_back(vec2(left, top)); // top left
-        pockets_.push_back(vec2( right, bottom)); // bottom right
+        pockets_.push_back(vec2( right, bottom + 10)); // bottom right
         pockets_.push_back(vec2( right, top)); // top right
-        pockets_.push_back(vec2(posX + (texture_->getWidth()/2) - 10, bottom - 10)); // bottom middle
-        pockets_.push_back(vec2(posX + (texture_->getWidth()/2) - 10, top + 10)); // top middle
+        pockets_.push_back(vec2(posX + (texture_->getWidth()/2) - 10, bottom)); // bottom middle
+        pockets_.push_back(vec2(posX + (texture_->getWidth()/2) - 10, top)); // top middle
     }
     bool Table::is_pocketed(std::shared_ptr<Ball> b)
     {

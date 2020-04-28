@@ -122,7 +122,7 @@ namespace myapp {
         vec2 center = app::getWindowCenter();
         b2BodyDef b2body1;
         b2body1.type = b2_kinematicBody;
-        vec2 pos_pt(0, center.y - texture->getHeight()/2);
+        vec2 pos_pt(texture->getWidth() - 1, center.y - texture->getHeight()/2);
         auto pos = Box2DUtility::pointsToMeters(pos_pt);
 
         b2body1.position.Set(pos.x, pos.y);
@@ -262,14 +262,19 @@ namespace myapp {
     void Game::CueHit() {
         cue_->ApplyForce();
     }
+    void Game::CueRecoil() {
+        cue_->Recoil();
+    }
     void Game::draw() {
 
         table_.draw();
+        /*
         for (auto& p : table_.pockets_)
         {
             double r = 10;
             cinder::gl::drawSolidCircle(p + cinder::vec2(r, r), r );
         }
+         */
         for (auto ball : balls_) {
             if (table_.is_pocketed(ball))
             {

@@ -37,6 +37,7 @@ namespace myapp {
         void draw();
         void update();
         void CueHit();
+        void CueRecoil();
         std::shared_ptr<Cue> cue_;
     private:
         Table table_;
