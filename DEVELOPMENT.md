@@ -23,3 +23,7 @@
 - **4/27/2020** Added pockets so that the balls disappear when they are hit in.
   - need to fix the positioning a bit because it is still inaccurate
   - need to get the cue rotating, still not working properly and by user clicking
+
+- **4/28/2020** Added friction and mass to balls so they move more realistically
+  - still need to add rotation of cue
+  - need to start implementing game logiv
