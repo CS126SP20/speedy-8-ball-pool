@@ -24,6 +24,5 @@
   - need to fix the positioning a bit because it is still inaccurate
   - need to get the cue rotating, still not working properly and by user clicking
 
-- **4/28/2020** Added friction and mass to balls so they move more realistically
-  - still need to add rotation of cue
-  - need to start implementing game logiv
+- **4/28/2020** Added friction and mass to balls so they move more realistically and added rotation of cue
+  - need to start implementing game logic
