@@ -29,6 +29,7 @@ class MyApp : public cinder::app::App {
 private:
     myapp::Game game_;
     cinder::gl::Texture2dRef texture_;
+    bool tracking_mode;
 };
 
 }  // namespace myapp

@@ -51,6 +51,8 @@ void MyApp::draw() {
 }
 void MyApp::mouseDown( MouseEvent event )
 {
+    game_.cue_->setPosition(event.getPos());
+    tracking_mode = true;
     //game_.CueRecoil();
    // game_.cue_->setPosition(event.getPos());
     //mScene.addGear( event.getPos() );
@@ -58,15 +60,23 @@ void MyApp::mouseDown( MouseEvent event )
 
 void MyApp::mouseDrag( MouseEvent event )
 {
-    //game_.cue_->setPosition(event.getPos());
-    //mScene.addGear( event.getPos() );
+    if (!tracking_mode) {
+        return;
+    }
+    game_.cue_->SetDirection(event.getPos());
 }
 
 void MyApp::mouseUp( MouseEvent event )
 {
-    game_.CueHit();
+    if (tracking_mode)
+        game_.CueHit();
+    tracking_mode = false;
 }
 
-void MyApp::keyDown(KeyEvent event) { }
+void MyApp::keyDown(KeyEvent event) {
+    if (event.getCode() == KeyEvent::KEY_SPACE) {
+        tracking_mode = false;
+    }
+}
 
 }  // namespace myapp

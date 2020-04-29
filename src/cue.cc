@@ -18,9 +18,27 @@ namespace myapp {
 
     void Cue::setPosition( const ci::vec2 &pos )
     {
-        body_->SetTransform( b2Vec2( pos.x, pos.y ), body_->GetAngle() );
+        body_->SetLinearVelocity(b2Vec2(0, 0));
+        b2Vec2 p = Box2DUtility::pointsToMeters(b2Vec2(pos.x, pos.y));
+        //auto y = Box2DUtility::pointsToMeters(pos.y);
+        body_->SetTransform( p, 0);
+        pos_ = pos;
+        hit = false;
     }
+    float Cue::CalculateAngle(vec2 pos1, vec2 pos2) {
+        b2Vec2 p1 = Box2DUtility::pointsToMeters(b2Vec2(pos1.x, pos1.y));
+        b2Vec2 p2 = Box2DUtility::pointsToMeters(b2Vec2(pos2.x, pos2.y));
+        b2Vec2 dist = p1 - b2Vec2(p2.x, p2.y);
+        return atan2f(-dist.x, dist.y);
 
+    }
+    void Cue::SetDirection(vec2 pos) {
+        direction_ = pos;
+        angle_ = CalculateAngle(direction_, pos_);
+        auto body = Box2DUtility::pointsToMeters(b2Vec2(pos_.x, pos_.y));
+        body_->SetTransform(body, angle_);
+
+    }
     vec2 Cue::getPos() const
     {
         //return vec2( body_->GetPosition().x, body_->GetPosition().y );
@@ -36,19 +54,13 @@ namespace myapp {
         gl::ScopedModelMatrix modelScope;
         gl::translate( pos );
         gl::rotate( t );
-        float result = std::atan (((getPos().y)*100)/((getPos().x + texture_->getWidth())*100)) * 180 / 3.1415;
-        //body_->SetFixedRotation(true);
-        //gl::rotate(result);
 
         gl::draw(texture_, destRect);
 
     }
     void Cue::ApplyForce() {
-        static float dir = 1;
-        b2Vec2 pos = b2Vec2(body_->GetPosition().x, body_->GetPosition().y);
-        body_->ApplyForce(b2Vec2(0, 0), pos);
-        body_->SetLinearVelocity(b2Vec2(5*dir, 0));
-        dir = dir* -1;
+        static float dir = -1;
+        body_->SetLinearVelocity(b2Vec2(50*dir*cosf(angle_), 50*dir*sinf(angle_)));
     }
     void Cue::Recoil() {
         static float dir = -1;
@@ -57,10 +69,9 @@ namespace myapp {
     }
     void Cue::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
         body_->SetLinearVelocity(b2Vec2(0, 0));
-        b2Vec2 pos = b2Vec2(body_->GetPosition().x, body_->GetPosition().y);
-        //body_->ApplyForce(b2Vec2(10, 0), pos);
-        ball->handleCollision(ball, contactPoint);
-        //ball->GetBody()->SetLinearVelocity(b2Vec2(10, 0));
-        //ApplyForce();
+        auto dir = -1;
+        ball->GetBody()->SetLinearVelocity(b2Vec2(50*dir*cosf(angle_), 50*dir*sinf(angle_)));
+        hit = true;
+
     }
 }

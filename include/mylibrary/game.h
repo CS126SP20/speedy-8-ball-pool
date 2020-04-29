@@ -38,10 +38,12 @@ namespace myapp {
         void update();
         void CueHit();
         void CueRecoil();
+        bool RoundOver();
         std::shared_ptr<Cue> cue_;
     private:
         std::shared_ptr<Table> table_;
         std::vector<std::shared_ptr<Ball>> balls_;
+        std::shared_ptr<Ball> cue_ball;
         std::vector<std::shared_ptr<Ball>> scored_balls_;
         std::vector<std::shared_ptr<Wall>> walls_;
         std::unique_ptr<b2World> world_;

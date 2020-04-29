@@ -65,9 +65,9 @@ namespace myapp {
         fixture.restitution = 0.5f;
         body->CreateFixture(&fixture);
 
-        auto ball = std::shared_ptr<Ball>(new Ball(body, texture1, pos1, radius));
-        ball->setId(0);
-        balls_.push_back(ball);
+        cue_ball = std::shared_ptr<Ball>(new Ball(body, texture1, pos1, radius));
+        cue_ball->setId(0);
+        balls_.push_back(cue_ball);
 
         // set rest of balls
         int cur = 1;
@@ -125,7 +125,8 @@ namespace myapp {
         b2BodyDef b2body1;
         b2body1.type = b2_kinematicBody;
         //vec2 pos_pt(texture->getWidth() - 1, center.y - texture->getHeight()/2);
-        vec2 pos_pt(-1, center.y - texture->getHeight()/2);
+        vec2 pos_pt(200, 150);
+        //vec2 pos_pt(cue_ball->getPos().x - texture->getWidth() - 1, cue_ball->getPos().y);
         auto pos = Box2DUtility::pointsToMeters(pos_pt);
 
         b2body1.position.Set(pos.x, pos.y);
@@ -133,12 +134,8 @@ namespace myapp {
 
         auto body1 = makeBodyShared(world_.get(), b2body1);
 
-        b2PolygonShape shape0;
-        auto x = Box2DUtility::pointsToMeters(texture->getWidth());
-        auto y = Box2DUtility::pointsToMeters(texture->getHeight());
-        shape0.SetAsBox(x , y);
-
-        shape0.m_radius = 0.01f;
+        b2CircleShape shape0;
+        shape0.m_radius = 0.001f;
         b2FixtureDef fixture0;
         fixture0.shape = &shape0;
         fixture0.density = 1.0f;
@@ -285,6 +282,17 @@ namespace myapp {
     void Game::CueRecoil() {
         cue_->Recoil();
     }
+
+    bool Game::RoundOver() {
+        bool over = true;
+        for (auto ball : balls_) {
+            if (ball->GetBody()->GetLinearVelocity().x > 0.0001 && ball->GetBody()->GetLinearVelocity().y > 0.0001) {
+                over = false;
+                break;
+            }
+        }
+        return over;
+    }
     void Game::draw() {
 
         table_->draw();
@@ -299,12 +307,17 @@ namespace myapp {
             if (table_->is_pocketed(ball))
             {
                 ball->is_visible = false;
-                //balls_.erase(std::remove(balls_.begin(), balls_.end(), ball), balls_.end());
+                ball->GetBody()->SetActive(false);
             }
             else
                 ball->draw();
         }
-        cue_->draw();
+        if (!cue_->hit) {
+            cue_->draw();
+            cue_->GetBody()->SetActive(true);
+        } else {
+            cue_->GetBody()->SetActive(false);
+        }
 
         for (auto wall : walls_) {
             wall->draw();
