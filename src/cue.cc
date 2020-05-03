@@ -39,6 +39,15 @@ namespace myapp {
         body_->SetTransform(body, angle_);
 
     }
+    void Cue::IncreasePower() {
+        if (power_ <= 50)
+            power_ += 5;
+    }
+
+    void Cue::DecreasePower() {
+        if (power_ >= 10)
+            power_ -= 5;
+    }
     vec2 Cue::getPos() const
     {
         //return vec2( body_->GetPosition().x, body_->GetPosition().y );
@@ -60,7 +69,7 @@ namespace myapp {
     }
     void Cue::ApplyForce() {
         static float dir = -1;
-        body_->SetLinearVelocity(b2Vec2(50*dir*cosf(angle_), 50*dir*sinf(angle_)));
+        body_->SetLinearVelocity(b2Vec2(power_*dir*cosf(angle_), power_*dir*sinf(angle_)));
     }
     void Cue::Recoil() {
         static float dir = -1;
@@ -70,7 +79,7 @@ namespace myapp {
     void Cue::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
         body_->SetLinearVelocity(b2Vec2(0, 0));
         auto dir = -1;
-        ball->GetBody()->SetLinearVelocity(b2Vec2(50*dir*cosf(angle_), 50*dir*sinf(angle_)));
+        ball->GetBody()->SetLinearVelocity(b2Vec2(power_*dir*cosf(angle_), power_*dir*sinf(angle_)));
         hit = true;
 
     }

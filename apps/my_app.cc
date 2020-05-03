@@ -77,6 +77,11 @@ void MyApp::keyDown(KeyEvent event) {
     if (event.getCode() == KeyEvent::KEY_SPACE) {
         tracking_mode = false;
     }
+    if (event.getCode() == KeyEvent::KEY_UP) {
+        game_.cue_->IncreasePower();
+    } else if (event.getCode() == KeyEvent::KEY_DOWN) {
+        game_.cue_->DecreasePower();
+    }
 }
 
 }  // namespace myapp

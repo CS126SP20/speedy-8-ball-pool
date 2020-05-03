@@ -29,9 +29,13 @@ namespace myapp {
         void ApplyForce();
         void Recoil();
         bool hit = false;
+        void IncreasePower();
+        void DecreasePower();
+        float GetPower() {return power_;}
     private:
         vec2 direction_;
         float angle_;
+        float power_ = 30;
         float CalculateAngle(vec2 pos1, vec2 pos2);
     };
 }

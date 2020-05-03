@@ -35,12 +35,6 @@ namespace myapp {
             body_->SetUserData(this);
             //SetPockets();
     }
-    void Table::setTexture() {
-        auto img = cinder::loadImage(cinder::app::loadAsset("table.png"));
-        texture_ = cinder::gl::Texture2d::create(img);
-        SetPockets();
-    }
-
     void Table::draw() {
         cinder::Area area = texture_->getBounds();
         cinder::Area bound = app::getWindowBounds();

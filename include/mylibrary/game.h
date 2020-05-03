@@ -30,21 +30,18 @@ namespace myapp {
         const BallContainerT& getBalls() const	{ return balls_; }
         void handleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint);
         void BeginContact( b2Contact* contact );
-        void setBalls();
-        void setCue();
-        void setTable();
         void setup();
         void draw();
         void update();
         void CueHit();
         void CueRecoil();
         bool RoundOver();
+        void DrawPowerBar();
         std::shared_ptr<Cue> cue_;
     private:
         std::shared_ptr<Table> table_;
         std::vector<std::shared_ptr<Ball>> balls_;
         std::shared_ptr<Ball> cue_ball;
-        std::vector<std::shared_ptr<Ball>> scored_balls_;
         std::vector<std::shared_ptr<Wall>> walls_;
         std::unique_ptr<b2World> world_;
         float mLastStepTime, mCurrentDecent;

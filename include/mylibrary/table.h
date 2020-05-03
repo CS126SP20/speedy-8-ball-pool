@@ -18,18 +18,10 @@ namespace myapp {
         void handleCollision(Ball *ball, const ci::vec2 &contactPoint ) override;
         void draw() override;
         float width_;
-        enum class Side	{ LEFT, RIGHT, TOP, BOTTOM } mSide;
     };
     class Table : Body {
     private:
-        int mMin_ = 0;
 
-        /*
-        Texture background;
-        Rect r[6] {};  // Rect colliders for walls
-        Ball b[12] {}; // Ball colliders to simulate pocket sides
-        SDL_Point pocket_sensors[6] {}; // Check if ball in the pocket
-        */
     public:
         Table(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
         std::vector<vec2> pockets_;
@@ -37,8 +29,6 @@ namespace myapp {
         //cinder::gl::Texture2dRef texture_;
         void SetPockets();
         //Table();
-        void setTexture();
-        void render();
         void draw();
 
         bool is_pocketed(std::shared_ptr<Ball> b);
