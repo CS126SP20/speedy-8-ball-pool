@@ -25,11 +25,15 @@ class MyApp : public cinder::app::App {
   void mouseDown( MouseEvent event ) override;
   void mouseDrag( MouseEvent event ) override;
   void mouseUp( MouseEvent event ) override;
+  void DrawTime();
 
 private:
     myapp::Game game_;
     cinder::gl::Texture2dRef texture_;
     bool tracking_mode;
+    std::chrono::time_point<std::chrono::system_clock> start_time_;
+   // float minutes = 0;
+   // float seconds = 0;
 };
 
 }  // namespace myapp

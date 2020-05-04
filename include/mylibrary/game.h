@@ -19,7 +19,6 @@ class Table;
 
 namespace myapp {
     enum class GameState {
-        kReady,
         kPlaying,
         kFoul,
         kGameOver,

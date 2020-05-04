@@ -23,7 +23,7 @@ namespace myapp {
         return BodyRef( world->CreateBody( &bodyDef ), [world]( b2Body *body ) { /*world->DestroyBody( body );*/ } );
     }
     void Game::setup() {
-        state_ = GameState::kReady;
+        state_ = GameState::kPlaying;
         mLastStepTime = 0;
         b2Vec2 gravity( 0, 0 );
 
@@ -46,9 +46,11 @@ namespace myapp {
         world_->Step( deltaTime, 8, 3 );
 
         mLastStepTime = currentTime;
+        /*
         if (RoundOver()) {
             state_ = GameState::kReady;
         }
+         */
         if (!GameOver() && !cue_ball->is_visible) {
             state_ = GameState::kFoul;
         }
@@ -83,7 +85,7 @@ namespace myapp {
     }
     void Game::SetCueBall(vec2 pos) {
         cue_ball->SetPosition(pos);
-        state_ = GameState::kReady;
+        state_ = GameState::kPlaying;
     }
 
     void Game::CueHit() {
@@ -105,7 +107,7 @@ namespace myapp {
     bool Game::RoundOver() {
         bool over = true;
         for (auto ball : balls_) {
-            if (ball->GetBody()->GetLinearVelocity().x > 0.01 && ball->GetBody()->GetLinearVelocity().y > 0.01) {
+            if (ball->GetBody()->GetLinearVelocity().x > 0.1 && ball->GetBody()->GetLinearVelocity().y > 0.1) {
                 over = false;
             }
         }

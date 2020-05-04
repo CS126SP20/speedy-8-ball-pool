@@ -17,6 +17,8 @@
 #include <cinder/Font.h>
 #include <cinder/Text.h>
 
+const char kNormalFont[] = "Arial";
+
 namespace myapp {
 
 using cinder::Color;
@@ -36,6 +38,7 @@ MyApp::MyApp() {}
 
 void MyApp::setup() {
     game_.setup();
+    start_time_ = system_clock::now();
     //game_.setTexture();
 }
 
@@ -47,8 +50,9 @@ void MyApp::draw() {
     cinder::gl::clear();
     gl::enableAlphaBlending();
     game_.draw();
-
+    DrawTime();
 }
+
 template <typename C>
 void PrintText(const string& text, const C& color, const cinder::ivec2& size,
                const cinder::vec2& loc) {
@@ -68,9 +72,36 @@ void PrintText(const string& text, const C& color, const cinder::ivec2& size,
     const auto texture = cinder::gl::Texture::create(surface);
     cinder::gl::draw(texture, locp);
 }
+void MyApp::DrawTime() {
+    const auto current_time = system_clock::now();
+    auto ms = current_time - start_time_;
+
+    using namespace std::chrono;
+    auto secs = duration_cast<seconds>(ms);
+    ms -= duration_cast<milliseconds>(secs);
+    auto mins = duration_cast<minutes>(secs);
+    secs -= duration_cast<seconds>(mins);
+
+    const cinder::vec2 center = vec2(100, 100);
+    const cinder::ivec2 size = {500, 50};
+    const Color color = Color::white();
+    std::string seconds = "";
+    std::string minutes = "";
+    if (mins.count() < 10) {
+        minutes = "0" + std::to_string(mins.count());
+    } else {
+        minutes = std::to_string(mins.count());
+    }
+    if (secs.count() < 10) {
+        seconds = "0" + std::to_string(secs.count());
+    } else {
+        seconds = std::to_string(secs.count());
+    }
+    PrintText(minutes + ":" + seconds, color, size, center);
+}
 void MyApp::mouseDown( MouseEvent event )
 {
-    if (game_.GetState() == GameState::kReady) {
+    if (game_.GetState() == GameState::kPlaying) {
         game_.cue_->setPosition(event.getPos());
         tracking_mode = true;
     }
