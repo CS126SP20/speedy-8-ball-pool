@@ -77,8 +77,9 @@ namespace myapp {
         dir = dir* -1;
     }
     void Cue::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
-        body_->SetLinearVelocity(b2Vec2(0, 0));
+        //body_->SetLinearVelocity(b2Vec2(0, 0));
         auto dir = -1;
+        body_->SetLinearVelocity(b2Vec2(power_*cosf(angle_), power_*sinf(angle_)));
         ball->GetBody()->SetLinearVelocity(b2Vec2(power_*dir*cosf(angle_), power_*dir*sinf(angle_)));
         hit = true;
 

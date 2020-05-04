@@ -20,10 +20,14 @@ namespace myapp {
     }
 
 
-    void Ball::setPosition( const ci::vec2 &pos )
+    void Ball::SetPosition( const ci::vec2 &pos )
     {
-        //pos_ = pos;
-        body_->SetTransform( b2Vec2( pos.x, pos.y ), body_->GetAngle() );
+        body_->SetLinearVelocity(b2Vec2(0, 0));
+        b2Vec2 p = Box2DUtility::pointsToMeters(b2Vec2(pos.x, pos.y));
+        //auto y = Box2DUtility::pointsToMeters(pos.y);
+        body_->SetTransform( p, 0);
+        pos_ = pos;
+        is_visible = true;
     }
 
     vec2 Ball::getPos() const

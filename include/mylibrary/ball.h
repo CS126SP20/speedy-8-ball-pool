@@ -32,7 +32,7 @@ namespace myapp {
         void handleCollision(Ball *ball, const ci::vec2 &contactPoint ) override;
         // pass in file name
         Ball(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos, float radius);
-        void setPosition( const ci::vec2 &pos );
+        void SetPosition( const ci::vec2 &pos );
         vec2 getPos() const;
         float getRadius() {return radius_;}
         void setId(int id);

@@ -56,7 +56,7 @@ namespace myapp {
                 shape.m_radius = Box2DUtility::pointsToMeters(radius);
                 b2FixtureDef fixture;
                 fixture.shape = &shape;
-                fixture.density = 500.0f;
+                fixture.density = 800.0f;
                 fixture.friction = 5.0f;
                 fixture.restitution = 0.5f;
                 body->CreateFixture(&fixture);
@@ -94,7 +94,7 @@ namespace myapp {
         shape.m_radius = Box2DUtility::pointsToMeters(radius);
         b2FixtureDef fixture;
         fixture.shape = &shape;
-        fixture.density = 500.0f;
+        fixture.density = 800.0f;
         fixture.friction = 1000000.0f;
         fixture.restitution = 0.5f;
         body->CreateFixture(&fixture);

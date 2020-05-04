@@ -49,11 +49,34 @@ void MyApp::draw() {
     game_.draw();
 
 }
+template <typename C>
+void PrintText(const string& text, const C& color, const cinder::ivec2& size,
+               const cinder::vec2& loc) {
+    cinder::gl::color(color);
+
+    auto box = TextBox()
+            .alignment(TextBox::CENTER)
+            .font(cinder::Font(kNormalFont, 30))
+            .size(size)
+            .color(color)
+            .backgroundColor(ColorA(0, 0, 0, 0))
+            .text(text);
+
+    const auto box_size = box.getSize();
+    const cinder::vec2 locp = {loc.x - box_size.x / 2, loc.y - box_size.y / 2};
+    const auto surface = box.render();
+    const auto texture = cinder::gl::Texture::create(surface);
+    cinder::gl::draw(texture, locp);
+}
 void MyApp::mouseDown( MouseEvent event )
 {
-    game_.cue_->setPosition(event.getPos());
-    tracking_mode = true;
-    //game_.CueRecoil();
+    if (game_.GetState() == GameState::kReady) {
+        game_.cue_->setPosition(event.getPos());
+        tracking_mode = true;
+    }
+    if (game_.GetState() == GameState::kFoul) {
+        game_.SetCueBall(event.getPos());
+    }
    // game_.cue_->setPosition(event.getPos());
     //mScene.addGear( event.getPos() );
 }

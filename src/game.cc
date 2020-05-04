@@ -23,6 +23,7 @@ namespace myapp {
         return BodyRef( world->CreateBody( &bodyDef ), [world]( b2Body *body ) { /*world->DestroyBody( body );*/ } );
     }
     void Game::setup() {
+        state_ = GameState::kReady;
         mLastStepTime = 0;
         b2Vec2 gravity( 0, 0 );
 
@@ -32,7 +33,6 @@ namespace myapp {
         BodyBuilder builder(world_.get());
 
         table_ = builder.SetTable();
-
         cue_ball = builder.SetCueBall();
         balls_ = builder.SetBalls(cue_ball->getRadius());
         walls_ = builder.SetWalls();
@@ -46,6 +46,13 @@ namespace myapp {
         world_->Step( deltaTime, 8, 3 );
 
         mLastStepTime = currentTime;
+        if (RoundOver()) {
+            state_ = GameState::kReady;
+        }
+        if (!GameOver() && !cue_ball->is_visible) {
+            state_ = GameState::kFoul;
+        }
+
     }
     void Game::BeginContact( b2Contact* contact ) {
         void *userDataA = contact->GetFixtureA()->GetBody()->GetUserData();
@@ -63,12 +70,22 @@ namespace myapp {
 
         if( typeid( *objectA ) == typeid( Cue ) )
             handleCueCollision(dynamic_cast<Cue *>( objectA ), objectB, contactPoint );
+        else if ( typeid( *objectB ) == typeid( Cue )) {
+            handleCueCollision(dynamic_cast<Cue *>( objectB ), objectA, contactPoint );
+        }
     }
     void Game::handleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint) {
+        state_ = GameState::kPlaying;
         Ball *ball = dynamic_cast<Ball *>( body );
         if(ball != NULL && ball->is_visible)
             cue->handleCollision(ball, contactPoint );
+
     }
+    void Game::SetCueBall(vec2 pos) {
+        cue_ball->SetPosition(pos);
+        state_ = GameState::kReady;
+    }
+
     void Game::CueHit() {
         cue_->ApplyForce();
     }
@@ -76,12 +93,20 @@ namespace myapp {
         cue_->Recoil();
     }
 
+    bool Game::GameOver() {
+        bool over = true;
+        for (auto ball : balls_) {
+            if (ball->is_visible) {
+                over = false;
+            }
+        }
+        return over;
+    }
     bool Game::RoundOver() {
         bool over = true;
         for (auto ball : balls_) {
-            if (ball->GetBody()->GetLinearVelocity().x > 0.0001 && ball->GetBody()->GetLinearVelocity().y > 0.0001) {
+            if (ball->GetBody()->GetLinearVelocity().x > 0.01 && ball->GetBody()->GetLinearVelocity().y > 0.01) {
                 over = false;
-                break;
             }
         }
         return over;
@@ -98,8 +123,10 @@ namespace myapp {
             cue_ball->is_visible = false;
             cue_ball->GetBody()->SetActive(false);
         }
-        else
+        else {
             cue_ball->draw();
+            cue_ball->GetBody()->SetActive(true);
+        }
 
         for (auto ball : balls_) {
             if (table_->is_pocketed(ball))
@@ -115,7 +142,6 @@ namespace myapp {
             cue_->GetBody()->SetActive(true);
         } else {
             cue_->GetBody()->SetActive(false);
-            cue_->GetBody()->SetLinearVelocity(b2Vec2(0, 0));
         }
 
         for (auto wall : walls_) {

@@ -18,6 +18,12 @@ class Cue;
 class Table;
 
 namespace myapp {
+    enum class GameState {
+        kReady,
+        kPlaying,
+        kFoul,
+        kGameOver,
+    };
 
     class Game : public b2ContactListener {
 
@@ -35,9 +41,12 @@ namespace myapp {
         void update();
         void CueHit();
         void CueRecoil();
+        bool GameOver();
         bool RoundOver();
+        void SetCueBall(vec2 pos);
         void DrawPowerBar();
         std::shared_ptr<Cue> cue_;
+        GameState GetState() {return state_;}
     private:
         std::shared_ptr<Table> table_;
         std::vector<std::shared_ptr<Ball>> balls_;
@@ -45,6 +54,8 @@ namespace myapp {
         std::vector<std::shared_ptr<Wall>> walls_;
         std::unique_ptr<b2World> world_;
         float mLastStepTime, mCurrentDecent;
+        bool IsOver_;
+        GameState state_;
 
     };
 }
