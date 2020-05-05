@@ -8,10 +8,11 @@ layout.
 
 **Author**: Lily Pan - [`lpan8@illinois.edu`](mailto:lpan8@illinois.edu)
 
-**Dependencies**
+# Dependencies
   - [cmake] (https://cmake.org/)
   - [box2d] (https://box2d.org/)
   - [sqlite] (https://www.sqlite.org/index.html)
+  
   
 
   
