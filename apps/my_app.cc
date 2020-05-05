@@ -16,8 +16,9 @@
 #include "cinder/Log.h"
 #include <cinder/Font.h>
 #include <cinder/Text.h>
+#include <cinder/params/Params.h>
 
-const char kNormalFont[] = "Arial";
+
 
 namespace myapp {
 
@@ -30,27 +31,34 @@ using std::chrono::duration_cast;
 using std::chrono::seconds;
 using std::chrono::system_clock;
 using std::string;
-
+const char kNormalFont[] = "Arial";
 using cinder::app::KeyEvent;
 using namespace cinder;
+using namespace ci;
+using namespace ci::app;
+const char kDbPath[] = "pool.db";
 
-MyApp::MyApp() {}
+MyApp::MyApp()
+    : scoreboard_{cinder::app::getAssetPath(kDbPath).string()},
+      printed_game_over_{false}
+    {}
 
 void MyApp::setup() {
     game_.setup();
     start_time_ = system_clock::now();
+    mPrintFps = false;
+    mParams = params::InterfaceGl::create( getWindow(), "Welcome To 8 Ball Pool!", toPixels( ivec2( 400, 100 ) ) );
+    vec2 center = app::getWindowCenter();
+    mParams->setPosition(ivec2(center.x - (mParams->getWidth() / 2), 50));
+    mParams->addParam( "Enter Username:", &player_name_);
+    mParams->addButton( "Click to start game", std::bind( &MyApp::button, this ) );
+
     //game_.setTexture();
 }
-
-void MyApp::update() {
-    game_.update();
-}
-
-void MyApp::draw() {
-    cinder::gl::clear();
-    gl::enableAlphaBlending();
-    game_.draw();
-    DrawTime();
+void MyApp::button()
+{
+    game_.SetGameState(GameState::kPlaying);
+    mParams->clear();
 }
 
 template <typename C>
@@ -72,32 +80,144 @@ void PrintText(const string& text, const C& color, const cinder::ivec2& size,
     const auto texture = cinder::gl::Texture::create(surface);
     cinder::gl::draw(texture, locp);
 }
-void MyApp::DrawTime() {
-    const auto current_time = system_clock::now();
-    auto ms = current_time - start_time_;
-
+std::string MyApp::ConvertTime(size_t ms) {
     using namespace std::chrono;
+
+    int secs = ms / 1000;
+    ms %= 1000;
+
+    int mins = secs / 60;
+    secs %= 60;
+    /*
     auto secs = duration_cast<seconds>(ms);
     ms -= duration_cast<milliseconds>(secs);
     auto mins = duration_cast<minutes>(secs);
     secs -= duration_cast<seconds>(mins);
-
-    const cinder::vec2 center = vec2(100, 100);
-    const cinder::ivec2 size = {500, 50};
-    const Color color = Color::white();
+*/
     std::string seconds = "";
     std::string minutes = "";
-    if (mins.count() < 10) {
-        minutes = "0" + std::to_string(mins.count());
+    if (mins < 10) {
+        minutes = "0" + std::to_string(mins);
     } else {
-        minutes = std::to_string(mins.count());
+        minutes = std::to_string(mins);
     }
-    if (secs.count() < 10) {
-        seconds = "0" + std::to_string(secs.count());
+    if (secs < 10) {
+        seconds = "0" + std::to_string(secs);
     } else {
-        seconds = std::to_string(secs.count());
+        seconds = std::to_string(secs);
     }
-    PrintText(minutes + ":" + seconds, color, size, center);
+    return minutes + ":" + seconds;
+}
+/*
+    std::string MyApp::ConvertTime() {
+        using namespace std::chrono;
+
+        const auto current_time = system_clock::now();
+        auto ms = current_time - start_time_;
+        auto secs = duration_cast<seconds>(ms);
+        ms -= duration_cast<milliseconds>(secs);
+        auto mins = duration_cast<minutes>(secs);
+        secs -= duration_cast<seconds>(mins);
+
+        std::string seconds = "";
+        std::string minutes = "";
+        if (mins.count() < 10) {
+            minutes = "0" + std::to_string(mins.count());
+        } else {
+            minutes = std::to_string(mins.count());
+        }
+        if (secs.count() < 10) {
+            seconds = "0" + std::to_string(secs.count());
+        } else {
+            seconds = std::to_string(secs.count());
+        }
+        return minutes + ":" + seconds;
+    }
+    */
+size_t MyApp::GetScore() {
+    using namespace std::chrono;
+
+    const auto current_time = system_clock::now();
+    auto ms = current_time - start_time_;
+    size_t duration  = duration_cast<milliseconds>(ms).count();
+    return duration;
+}
+void MyApp::update() {
+    if (game_.GetState() == GameState::kLogin) {
+        if(mPrintFps && getElapsedFrames() % 60 == 0 )
+            console() << getAverageFps() << std::endl;
+    }
+    else if (game_.GetState() == GameState::kPlaying || game_.GetState() == GameState::kFoul) {
+        game_.update();
+    }
+    else if (game_.GetState() == GameState::kGameOver) {
+        if (top_players_.empty()) {
+            scoreboard_.AddScoreToScoreBoard({player_name_, GetScore()});
+            top_players_ = scoreboard_.RetrieveHighScores(kLimit);
+            Player player(player_name_, GetScore());
+            top_scores_ = scoreboard_.RetrieveHighScores(player, kLimit);
+            // It is crucial the this vector be populated, given that `kLimit` > 0.
+            assert(!top_players_.empty());
+        }
+        return;
+    }
+
+}
+
+void MyApp::DrawGameOver() {
+    // Lazily print.
+    if (printed_game_over_) return;
+    if (top_players_.empty()) return;
+
+    const cinder::vec2 center = getWindowCenter();
+    const cinder::ivec2 size = {500, 50};
+    const Color color = Color::white();
+
+    size_t row = 1;
+    PrintText("Game Over :(", color, size, center);
+    PrintText("All Player Top Scores", color, size, {center.x, center.y + 50});
+    for (const myapp::Player& player : top_players_) {
+        std::stringstream ss;
+        ss << player.name << " - " << ConvertTime(player.score);
+        PrintText(ss.str(), color, size, {center.x, center.y + (++row) * 50});
+    }
+    PrintText("Current Player Top Scores", color, size, {center.x, 100});
+    row = 0;
+    for (const myapp::Player& player : top_scores_) {
+        std::stringstream ss2;
+        ss2 << player.name << " - " << ConvertTime(player.score);
+        PrintText(ss2.str(), color, size, {center.x, 100 + (++row) * 50});
+    }
+    printed_game_over_ = true;
+}
+
+void MyApp::draw() {
+    if (game_.GetState() == GameState::kLogin) {
+        auto img = cinder::loadImage(cinder::app::loadAsset("background.png"));
+        gl::TextureRef texture = cinder::gl::Texture2d::create(img);
+        gl::draw(texture, vec2(0, 0));
+        //gl::clear( Color::gray( 0.1f ) );
+        mParams->draw();
+    }
+    else if (game_.GetState() == GameState::kPlaying || game_.GetState() == GameState::kFoul ) {
+        cinder::gl::clear();
+        gl::enableAlphaBlending();
+        game_.draw();
+        const cinder::vec2 center = vec2(100, 100);
+        const cinder::ivec2 size = {500, 50};
+        const Color color = Color::white();
+        PrintText(ConvertTime(GetScore()), color, size, center);
+    } else if (game_.GetState() == GameState::kGameOver) {
+
+        if (!printed_game_over_) cinder::gl::clear(Color(0, 0, 0));
+        DrawGameOver();
+        /*
+        auto img = cinder::loadImage(cinder::app::loadAsset("background.png"));
+        gl::TextureRef texture = cinder::gl::Texture2d::create(img);
+        gl::draw(texture, vec2(0, 0));
+         */
+    }
+
 }
 void MyApp::mouseDown( MouseEvent event )
 {
@@ -128,6 +248,8 @@ void MyApp::mouseUp( MouseEvent event )
 }
 
 void MyApp::keyDown(KeyEvent event) {
+    if (event.getCode() == KeyEvent::KEY_SPACE)
+        game_.SetGameState(GameState::kGameOver);
     if (event.getCode() == KeyEvent::KEY_SPACE) {
         tracking_mode = false;
     }

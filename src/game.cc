@@ -15,15 +15,14 @@
 #include "cinder/Rand.h"
 #include "cinder/CinderAssert.h"
 #include "mylibrary/body_builder.h"
+
 using namespace cinder;
+using std::string;
 
 namespace myapp {
-    BodyRef Game::makeBodyShared( b2World *world, const b2BodyDef &bodyDef )
-    {
-        return BodyRef( world->CreateBody( &bodyDef ), [world]( b2Body *body ) { /*world->DestroyBody( body );*/ } );
-    }
     void Game::setup() {
-        state_ = GameState::kPlaying;
+        state_ = GameState::kLogin;
+
         mLastStepTime = 0;
         b2Vec2 gravity( 0, 0 );
 
@@ -38,7 +37,9 @@ namespace myapp {
         walls_ = builder.SetWalls();
         cue_ = builder.SetCue();
 
+
     }
+
     void Game::update() {
         float currentTime = (float)app::getElapsedSeconds();
         float deltaTime = currentTime - mLastStepTime;
@@ -46,13 +47,12 @@ namespace myapp {
         world_->Step( deltaTime, 8, 3 );
 
         mLastStepTime = currentTime;
-        /*
-        if (RoundOver()) {
-            state_ = GameState::kReady;
-        }
-         */
+
         if (!GameOver() && !cue_ball->is_visible) {
             state_ = GameState::kFoul;
+        }
+        if (GameOver()) {
+            state_= GameState::kGameOver;
         }
 
     }

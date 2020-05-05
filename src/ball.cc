@@ -23,6 +23,7 @@ namespace myapp {
     void Ball::SetPosition( const ci::vec2 &pos )
     {
         body_->SetLinearVelocity(b2Vec2(0, 0));
+        body_->SetAngularVelocity(0.0);
         b2Vec2 p = Box2DUtility::pointsToMeters(b2Vec2(pos.x, pos.y));
         //auto y = Box2DUtility::pointsToMeters(pos.y);
         body_->SetTransform( p, 0);

@@ -19,6 +19,7 @@ class Table;
 
 namespace myapp {
     enum class GameState {
+        kLogin,
         kPlaying,
         kFoul,
         kGameOver,
@@ -28,7 +29,6 @@ namespace myapp {
 
     public:
         virtual ~Game();
-        BodyRef	makeBodyShared( b2World *world, const b2BodyDef &bodyDef );
         typedef std::vector<std::shared_ptr<Wall> >		WallContainerT;
         typedef std::vector<std::shared_ptr<Ball> >		BallContainerT;
         b2World* getWorld() const		{ return world_.get(); }
@@ -46,6 +46,7 @@ namespace myapp {
         void DrawPowerBar();
         std::shared_ptr<Cue> cue_;
         GameState GetState() {return state_;}
+        void SetGameState(GameState state) {state_ = state;}
     private:
         std::shared_ptr<Table> table_;
         std::vector<std::shared_ptr<Ball>> balls_;

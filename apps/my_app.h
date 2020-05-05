@@ -9,6 +9,8 @@
 #include <cinder/gl/gl.h>
 #include "mylibrary/table.h"
 #include "mylibrary/game.h"
+#include "mylibrary/scoreboard.h"
+#include <cinder/params/Params.h>
 
 using namespace ci;
 using namespace ci::app;
@@ -25,13 +27,26 @@ class MyApp : public cinder::app::App {
   void mouseDown( MouseEvent event ) override;
   void mouseDrag( MouseEvent event ) override;
   void mouseUp( MouseEvent event ) override;
-  void DrawTime();
+  size_t GetScore();
+  std::string ConvertTime(size_t ms);
+  void button();
+  void DrawGameOver();
 
 private:
     myapp::Game game_;
     cinder::gl::Texture2dRef texture_;
     bool tracking_mode;
+    ScoreBoard scoreboard_;
+    std::vector<Player> top_players_;
+    std::vector<Player> top_scores_;
+    const size_t kLimit = 3;
     std::chrono::time_point<std::chrono::system_clock> start_time_;
+    params::InterfaceGlRef	mParams;
+    std::string player_name_;
+    bool mPrintFps;
+    bool printed_game_over_;
+
+
    // float minutes = 0;
    // float seconds = 0;
 };

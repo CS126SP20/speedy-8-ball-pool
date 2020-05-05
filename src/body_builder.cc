@@ -79,10 +79,6 @@ namespace myapp {
         gl::TextureRef texture1 = cinder::gl::Texture2d::create(img1);
         const float radius = texture1->getWidth() / 2.0f;
         vec2 pos0(300 + radius, app::getWindowHeight()/2);
-        auto height = texture1->getHeight();
-        auto width = texture1->getWidth();
-
-        const float velMax = 5;
         vec2 pos1 = Box2DUtility::pointsToMeters(pos0);
         b2body.position.Set(pos1.x, pos1.y);
         b2body.linearVelocity = b2Vec2(0, 0);
