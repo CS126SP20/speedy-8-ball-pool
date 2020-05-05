@@ -248,7 +248,7 @@ void MyApp::mouseUp( MouseEvent event )
 }
 
 void MyApp::keyDown(KeyEvent event) {
-    if (event.getCode() == KeyEvent::KEY_SPACE)
+    if (event.getCode() == KeyEvent::KEY_ESCAPE)
         game_.SetGameState(GameState::kGameOver);
     if (event.getCode() == KeyEvent::KEY_SPACE) {
         tracking_mode = false;

@@ -37,6 +37,16 @@ namespace myapp {
         walls_ = builder.SetWalls();
         cue_ = builder.SetCue();
 
+        audio::SourceFileRef sourceFile = audio::load( app::loadAsset( "cue.wav" ) );
+        cue_sound_ = audio::Voice::create( sourceFile );
+        audio::SourceFileRef sourceFile2 = audio::load( app::loadAsset( "poolballhit.wav" ) );
+        ball_sound_ = audio::Voice::create( sourceFile2 );
+        audio::SourceFileRef sourceFile3 = audio::load( app::loadAsset( "wall.wav" ) );
+        wall_sound_ = audio::Voice::create( sourceFile3 );
+        audio::SourceFileRef sourceFile4 = audio::load( app::loadAsset( "pocket.wav" ) );
+        pocket_sound_ = audio::Voice::create( sourceFile4 );
+
+
 
     }
 
@@ -71,16 +81,37 @@ namespace myapp {
         Body *objectB = static_cast<Body *>( userDataB );
 
         if( typeid( *objectA ) == typeid( Cue ) )
-            handleCueCollision(dynamic_cast<Cue *>( objectA ), objectB, contactPoint );
+            HandleCueCollision(dynamic_cast<Cue *>( objectA ), objectB, contactPoint );
         else if ( typeid( *objectB ) == typeid( Cue )) {
-            handleCueCollision(dynamic_cast<Cue *>( objectB ), objectA, contactPoint );
+            HandleCueCollision(dynamic_cast<Cue *>( objectB ), objectA, contactPoint );
+        } else if ( typeid( *objectA ) == typeid( Ball )) {
+            HandleBallCollision(dynamic_cast<Ball *>( objectA ), objectB, contactPoint );
+        } else if (typeid( *objectB ) == typeid( Ball )) {
+            HandleBallCollision(dynamic_cast<Ball *>( objectB ), objectA, contactPoint );
+        } else if ( typeid( *objectA ) == typeid( Wall )) {
+            HandleWallCollision(dynamic_cast<Wall *>( objectA ), objectB, contactPoint );
+        } else if (typeid( *objectB ) == typeid( Wall )) {
+            HandleWallCollision(dynamic_cast<Wall *>( objectB ), objectA, contactPoint );
         }
     }
-    void Game::handleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint) {
+    void Game::HandleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint) {
         state_ = GameState::kPlaying;
+        cue_sound_->start();
         Ball *ball = dynamic_cast<Ball *>( body );
         if(ball != NULL && ball->is_visible)
             cue->handleCollision(ball, contactPoint );
+
+    }
+    void Game::HandleBallCollision(Ball *ball_, Body *body, const vec2 &contactPoint) {
+        state_ = GameState::kPlaying;
+        ball_sound_->start();
+        Ball *ball = dynamic_cast<Ball *>( body );
+
+    }
+    void Game::HandleWallCollision(Wall *wall, Body *body, const vec2 &contactPoint) {
+        state_ = GameState::kPlaying;
+        wall_sound_->start();
+        Ball *ball = dynamic_cast<Ball *>( body );
 
     }
     void Game::SetCueBall(vec2 pos) {
@@ -120,8 +151,9 @@ namespace myapp {
     void Game::draw() {
         DrawPowerBar();
         table_->draw();
-        if (table_->is_pocketed(cue_ball))
+        if (table_->is_pocketed(cue_ball) && cue_ball->GetBody()->IsActive())
         {
+            pocket_sound_->start();
             cue_ball->is_visible = false;
             cue_ball->GetBody()->SetActive(false);
         }
@@ -131,8 +163,9 @@ namespace myapp {
         }
 
         for (auto ball : balls_) {
-            if (table_->is_pocketed(ball))
+            if (table_->is_pocketed(ball) && ball->GetBody()->IsActive())
             {
+                pocket_sound_->start();
                 ball->is_visible = false;
                 ball->GetBody()->SetActive(false);
             }
