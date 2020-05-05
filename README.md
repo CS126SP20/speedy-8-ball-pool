@@ -6,4 +6,13 @@
 Read [this document](https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html) to understand the project
 layout.
 
-**Author**: Anonymous - [`example@illinois.edu`](mailto:example@illinois.edu)
+**Author**: Lily Pan - [`lpan8@illinois.edu`](mailto:lpan8@illinois.edu)
+
+# Dependencies
+  - [cmake](https://cmake.org/)
+  - [box2d](https://box2d.org/)
+  - [sqlite](https://www.sqlite.org/index.html)
+  
+  
+
+  
