@@ -9,9 +9,13 @@ layout.
 **Author**: Lily Pan - [`lpan8@illinois.edu`](mailto:lpan8@illinois.edu)
 
 # Dependencies
+  - [MSVC 2015+](https://visualstudio.microsoft.com/)
   - [cmake](https://cmake.org/)
+  - [cinder](https://libcinder.org/)
   - [box2d](https://box2d.org/)
   - [sqlite](https://www.sqlite.org/index.html)
+
+  
   
   
 
