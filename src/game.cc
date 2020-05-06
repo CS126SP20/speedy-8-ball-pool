@@ -51,7 +51,7 @@ namespace myapp {
     }
 
     void Game::update() {
-        float currentTime = (float)app::getElapsedSeconds();
+        auto currentTime = (float)app::getElapsedSeconds();
         float deltaTime = currentTime - mLastStepTime;
 
         world_->Step( deltaTime, 8, 3 );
@@ -105,40 +105,24 @@ namespace myapp {
     void Game::HandleBallCollision(Ball *ball_, Body *body, const vec2 &contactPoint) {
         state_ = GameState::kPlaying;
         ball_sound_->start();
-        Ball *ball = dynamic_cast<Ball *>( body );
 
     }
     void Game::HandleWallCollision(Wall *wall, Body *body, const vec2 &contactPoint) {
         state_ = GameState::kPlaying;
         wall_sound_->start();
-        Ball *ball = dynamic_cast<Ball *>( body );
 
     }
-    void Game::SetCueBall(vec2 pos) {
+    void Game::SetCueBall(const vec2& pos) {
         cue_ball->SetPosition(pos);
         state_ = GameState::kPlaying;
     }
-
     void Game::CueHit() {
         cue_->ApplyForce();
     }
-    void Game::CueRecoil() {
-        cue_->Recoil();
-    }
-
     bool Game::GameOver() {
         bool over = true;
         for (auto ball : balls_) {
             if (ball->is_visible) {
-                over = false;
-            }
-        }
-        return over;
-    }
-    bool Game::RoundOver() {
-        bool over = true;
-        for (auto ball : balls_) {
-            if (ball->GetBody()->GetLinearVelocity().x > 0.1 && ball->GetBody()->GetLinearVelocity().y > 0.1) {
                 over = false;
             }
         }

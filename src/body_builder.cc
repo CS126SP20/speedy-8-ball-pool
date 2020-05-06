@@ -23,8 +23,6 @@ namespace myapp {
     std::vector<std::shared_ptr<Ball>> BodyBuilder::SetBalls(double radius) {
         std::vector<std::shared_ptr<Ball>> balls_;
 
-        //balls_.push_back(cue_ball);
-
         // set rest of balls
         int cur = 1;
         double px = 600.0;
@@ -40,16 +38,11 @@ namespace myapp {
                 auto img = cinder::loadImage(cinder::app::loadAsset(ball_file));
                 gl::TextureRef texture = cinder::gl::Texture2d::create(img);
 
-                auto height = texture->getHeight();
-                auto width = texture->getWidth();
-
-                const float velMax = 5;
                 vec2 pos = Box2DUtility::pointsToMeters(pos_pt);
                 b2body.position.Set(pos.x, pos.y);
                 b2body.linearVelocity = b2Vec2(0, 0);
                 b2body.linearDamping = 0.8f;
                 b2body.angularDamping = 0.8f;
-                //b2body.linearVelocity = b2Vec2(i%2 == 0 ? -1 : 1, 0);
                 auto body = makeBodyShared(world_, b2body);
 
                 b2CircleShape shape;
@@ -106,9 +99,7 @@ namespace myapp {
         vec2 center = app::getWindowCenter();
         b2BodyDef b2body1;
         b2body1.type = b2_kinematicBody;
-        //vec2 pos_pt(texture->getWidth() - 1, center.y - texture->getHeight()/2);
         vec2 pos_pt(200, 150);
-        //vec2 pos_pt(cue_ball->getPos().x - texture->getWidth() - 1, cue_ball->getPos().y);
         auto pos = Box2DUtility::pointsToMeters(pos_pt);
 
         b2body1.position.Set(pos.x, pos.y);

@@ -34,7 +34,6 @@ class MyApp : public cinder::app::App {
 
 private:
     myapp::Game game_;
-    cinder::gl::Texture2dRef texture_;
     bool tracking_mode;
     ScoreBoard scoreboard_;
     std::vector<Player> top_players_;
@@ -46,9 +45,6 @@ private:
     bool mPrintFps;
     bool printed_game_over_;
 
-
-   // float minutes = 0;
-   // float seconds = 0;
 };
 
 }  // namespace myapp

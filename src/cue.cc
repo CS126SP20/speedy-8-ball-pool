@@ -20,7 +20,6 @@ namespace myapp {
     {
         body_->SetLinearVelocity(b2Vec2(0, 0));
         b2Vec2 p = Box2DUtility::pointsToMeters(b2Vec2(pos.x, pos.y));
-        //auto y = Box2DUtility::pointsToMeters(pos.y);
         body_->SetTransform( p, 0);
         pos_ = pos;
         hit = false;
@@ -48,11 +47,6 @@ namespace myapp {
         if (power_ >= 10)
             power_ -= 5;
     }
-    vec2 Cue::getPos() const
-    {
-        //return vec2( body_->GetPosition().x, body_->GetPosition().y );
-        return pos_;
-    }
 
     void Cue::draw() {
 
@@ -71,11 +65,7 @@ namespace myapp {
         static float dir = -1;
         body_->SetLinearVelocity(b2Vec2(power_*dir*cosf(angle_), power_*dir*sinf(angle_)));
     }
-    void Cue::Recoil() {
-        static float dir = -1;
-        body_->SetLinearVelocity(b2Vec2(2*dir, 0));
-        dir = dir* -1;
-    }
+
     void Cue::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
         //body_->SetLinearVelocity(b2Vec2(0, 0));
         auto dir = -1;

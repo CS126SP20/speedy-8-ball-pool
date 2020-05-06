@@ -45,7 +45,6 @@ MyApp::MyApp()
 
 void MyApp::setup() {
     game_.setup();
-    start_time_ = system_clock::now();
     mPrintFps = false;
     mParams = params::InterfaceGl::create( getWindow(), "Welcome To 8 Ball Pool!", toPixels( ivec2( 400, 100 ) ) );
     vec2 center = app::getWindowCenter();
@@ -53,12 +52,12 @@ void MyApp::setup() {
     mParams->addParam( "Enter Username:", &player_name_);
     mParams->addButton( "Click to start game", std::bind( &MyApp::button, this ) );
 
-    //game_.setTexture();
 }
 void MyApp::button()
 {
     game_.SetGameState(GameState::kPlaying);
     mParams->clear();
+    start_time_ = system_clock::now();
 }
 
 template <typename C>
@@ -88,14 +87,9 @@ std::string MyApp::ConvertTime(size_t ms) {
 
     int mins = secs / 60;
     secs %= 60;
-    /*
-    auto secs = duration_cast<seconds>(ms);
-    ms -= duration_cast<milliseconds>(secs);
-    auto mins = duration_cast<minutes>(secs);
-    secs -= duration_cast<seconds>(mins);
-*/
-    std::string seconds = "";
-    std::string minutes = "";
+
+    std::string seconds;
+    std::string minutes;
     if (mins < 10) {
         minutes = "0" + std::to_string(mins);
     } else {
@@ -108,32 +102,6 @@ std::string MyApp::ConvertTime(size_t ms) {
     }
     return minutes + ":" + seconds;
 }
-/*
-    std::string MyApp::ConvertTime() {
-        using namespace std::chrono;
-
-        const auto current_time = system_clock::now();
-        auto ms = current_time - start_time_;
-        auto secs = duration_cast<seconds>(ms);
-        ms -= duration_cast<milliseconds>(secs);
-        auto mins = duration_cast<minutes>(secs);
-        secs -= duration_cast<seconds>(mins);
-
-        std::string seconds = "";
-        std::string minutes = "";
-        if (mins.count() < 10) {
-            minutes = "0" + std::to_string(mins.count());
-        } else {
-            minutes = std::to_string(mins.count());
-        }
-        if (secs.count() < 10) {
-            seconds = "0" + std::to_string(secs.count());
-        } else {
-            seconds = std::to_string(secs.count());
-        }
-        return minutes + ":" + seconds;
-    }
-    */
 size_t MyApp::GetScore() {
     using namespace std::chrono;
 
@@ -178,14 +146,23 @@ void MyApp::DrawGameOver() {
     PrintText("All Player Top Scores", color, size, {center.x, center.y + 50});
     for (const myapp::Player& player : top_players_) {
         std::stringstream ss;
-        ss << player.name << " - " << ConvertTime(player.score);
+        if (game_.GameOver()) {
+            ss << player.name << " - " << ConvertTime(player.score);
+        } else {
+            ss << player.name << " - " << ConvertTime(player.score) + " (Quit)";
+        }
         PrintText(ss.str(), color, size, {center.x, center.y + (++row) * 50});
     }
     PrintText("Current Player Top Scores", color, size, {center.x, 100});
     row = 0;
     for (const myapp::Player& player : top_scores_) {
         std::stringstream ss2;
-        ss2 << player.name << " - " << ConvertTime(player.score);
+        if (game_.GameOver()) {
+            ss2 << player.name << " - " << ConvertTime(player.score);
+        } else {
+            ss2 << player.name << " - " << ConvertTime(player.score) + " (Quit)";
+        }
+
         PrintText(ss2.str(), color, size, {center.x, 100 + (++row) * 50});
     }
     printed_game_over_ = true;
@@ -211,11 +188,6 @@ void MyApp::draw() {
 
         if (!printed_game_over_) cinder::gl::clear(Color(0, 0, 0));
         DrawGameOver();
-        /*
-        auto img = cinder::loadImage(cinder::app::loadAsset("background.png"));
-        gl::TextureRef texture = cinder::gl::Texture2d::create(img);
-        gl::draw(texture, vec2(0, 0));
-         */
     }
 
 }
@@ -228,8 +200,6 @@ void MyApp::mouseDown( MouseEvent event )
     if (game_.GetState() == GameState::kFoul) {
         game_.SetCueBall(event.getPos());
     }
-   // game_.cue_->setPosition(event.getPos());
-    //mScene.addGear( event.getPos() );
 }
 
 void MyApp::mouseDrag( MouseEvent event )

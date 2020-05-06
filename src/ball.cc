@@ -46,11 +46,8 @@ namespace myapp {
             Rectf imageDest(-radius_-2, -radius_-2, radius_+2, radius_+2);
 
             float t = body_->GetAngle();
-            //auto radius = texture_->getWidth() / 2.0f;
 
             gl::ScopedModelMatrix modelScope;
-            //ivec2 imgSize(texture_->getWidth(), texture_->getHeight());
-            // ivec2 centerImage( data.pos_x,  (app::getWindowHeight() - imgSize.y)/2);
             gl::translate(pos);
             gl::rotate( t );
             gl::draw(texture_, imageDest);

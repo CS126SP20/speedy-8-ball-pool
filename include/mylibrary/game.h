@@ -44,10 +44,8 @@ namespace myapp {
         void draw();
         void update();
         void CueHit();
-        void CueRecoil();
         bool GameOver();
-        bool RoundOver();
-        void SetCueBall(vec2 pos);
+        void SetCueBall(const vec2& pos);
         void DrawPowerBar();
         std::shared_ptr<Cue> cue_;
         GameState GetState() {return state_;}

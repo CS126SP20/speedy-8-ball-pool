@@ -30,8 +30,8 @@ namespace myapp {
         std::shared_ptr<Cue> SetCue();
         std::shared_ptr<Table> SetTable();
         std::vector<std::shared_ptr<Wall>> SetWalls();
-    private:
         BodyRef makeBodyShared( b2World *world, const b2BodyDef &bodyDef );
+    private:
 
         std::shared_ptr<Wall> CreateWall(float posx, float posy, b2Vec2 width, b2Vec2 height);
         b2World *world_;

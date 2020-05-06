@@ -19,8 +19,6 @@ namespace myapp {
 
     class Ball : public Body {
     public:
-        // not movable if it is opposite type of current player
-        bool is_movable = true;
         // whether or not it is hit into hole
         bool is_visible = true;
         // the number of the ball
@@ -36,12 +34,7 @@ namespace myapp {
         vec2 getPos() const;
         float getRadius() {return radius_;}
         void setId(int id);
-        void setVel(double x_vel, double y_vel);
 
-        bool is_moving();
-
-        static bool is_solid(int num) {return num > 0 && num < 8;}
-        static bool is_stripes(int num) {return num > 8 && num < 16;}
     private:
         float radius_;
     };
