@@ -5,13 +5,8 @@
 #include "mylibrary/game.h"
 #include <cinder/app/App.h>
 #include <Box2D/Box2D.h>
-#include <cinder/gl/gl.h>
 #include <cinder/gl/draw.h>
-#include <algorithm>
-#include <cmath>
-#include <string>
 #include "mylibrary/box2d_utility.h"
-#include "cinder/Log.h"
 #include "cinder/Rand.h"
 #include "cinder/CinderAssert.h"
 #include "mylibrary/body_builder.h"
@@ -20,23 +15,24 @@ using namespace cinder;
 using std::string;
 
 namespace myapp {
-    void Game::setup() {
+    void Game::Setup() {
+        // initial game state
         state_ = GameState::kLogin;
 
         mLastStepTime = 0;
         b2Vec2 gravity( 0, 0 );
-
         world_.reset( new b2World( gravity ) );
         world_->SetContactListener( this );
 
+        // creates all the bodies
         BodyBuilder builder(world_.get());
+        table_ = builder.CreateTable();
+        cue_ball = builder.CreateCueBall();
+        balls_ = builder.CreateBalls(cue_ball->getRadius());
+        walls_ = builder.CreateWalls();
+        cue_ = builder.CreateCue();
 
-        table_ = builder.SetTable();
-        cue_ball = builder.SetCueBall();
-        balls_ = builder.SetBalls(cue_ball->getRadius());
-        walls_ = builder.SetWalls();
-        cue_ = builder.SetCue();
-
+        // creates all the audio refs
         audio::SourceFileRef sourceFile = audio::load( app::loadAsset( "cue.wav" ) );
         cue_sound_ = audio::Voice::create( sourceFile );
         audio::SourceFileRef sourceFile2 = audio::load( app::loadAsset( "poolballhit.wav" ) );
@@ -46,18 +42,16 @@ namespace myapp {
         audio::SourceFileRef sourceFile4 = audio::load( app::loadAsset( "pocket.wav" ) );
         pocket_sound_ = audio::Voice::create( sourceFile4 );
 
-
-
     }
 
-    void Game::update() {
+    void Game::Update() {
         auto currentTime = (float)app::getElapsedSeconds();
         float deltaTime = currentTime - mLastStepTime;
 
         world_->Step( deltaTime, 8, 3 );
-
         mLastStepTime = currentTime;
 
+        // foul if game is not over and cue ball is hit in
         if (!GameOver() && !cue_ball->is_visible) {
             state_ = GameState::kFoul;
         }
@@ -94,11 +88,12 @@ namespace myapp {
             HandleWallCollision(dynamic_cast<Wall *>( objectB ), objectA, contactPoint );
         }
     }
+
     void Game::HandleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint) {
         state_ = GameState::kPlaying;
         cue_sound_->start();
         Ball *ball = dynamic_cast<Ball *>( body );
-        if(ball != NULL && ball->is_visible)
+        if(ball != nullptr && ball->is_visible)
             cue->handleCollision(ball, contactPoint );
 
     }
@@ -122,6 +117,7 @@ namespace myapp {
     bool Game::GameOver() {
         bool over = true;
         for (auto ball : balls_) {
+            // game is over if all the balls are not visible
             if (ball->is_visible) {
                 over = false;
             }
@@ -130,19 +126,23 @@ namespace myapp {
     }
     void Game::DrawPowerBar() {
         cinder::gl::drawStrokedRect(Rectf(100, 600, 485, 620));
+        // draws size based on power of cue
         cinder::gl::drawSolidRect(Rectf(100, 600, 100 + cue_->GetPower()*7, 620));
     }
-    void Game::draw() {
+    void Game::Draw() {
         DrawPowerBar();
         table_->draw();
+
         if (table_->is_pocketed(cue_ball) && cue_ball->GetBody()->IsActive())
         {
             pocket_sound_->start();
+            // if ball is hit in, set visibility to false and deactiviate body
             cue_ball->is_visible = false;
             cue_ball->GetBody()->SetActive(false);
         }
         else {
             cue_ball->draw();
+            // reactivate cue ball after placed
             cue_ball->GetBody()->SetActive(true);
         }
 
@@ -150,16 +150,19 @@ namespace myapp {
             if (table_->is_pocketed(ball) && ball->GetBody()->IsActive())
             {
                 pocket_sound_->start();
+                // if ball is hit in, set visibility to false and deactiviate body
                 ball->is_visible = false;
                 ball->GetBody()->SetActive(false);
             }
             else
                 ball->draw();
         }
-        if (!cue_->hit) {
+        if (!cue_->IsHit()) {
+            // if cue has not hit yet, draw cue and set body as active
             cue_->draw();
             cue_->GetBody()->SetActive(true);
         } else {
+            // after cue hits ball, deactivate and do not draw
             cue_->GetBody()->SetActive(false);
         }
 
@@ -170,7 +173,7 @@ namespace myapp {
     }
     Game::~Game() {
         b2Body* b = world_->GetBodyList();
-        while (b != NULL) {
+        while (b != nullptr) {
             world_->DestroyBody(b);
             b = world_->GetBodyList();
         }

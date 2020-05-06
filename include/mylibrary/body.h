@@ -14,8 +14,12 @@
 using namespace cinder;
 
 namespace myapp {
+
     class Ball;
     typedef std::shared_ptr<b2Body>	BodyRef;
+    /**
+     * Parent body class that all other bodies inherit from
+     */
     class Body {
     protected:
         BodyRef body_;

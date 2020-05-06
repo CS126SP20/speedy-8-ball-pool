@@ -27,7 +27,9 @@ class MyApp : public cinder::app::App {
   void mouseDown( MouseEvent event ) override;
   void mouseDrag( MouseEvent event ) override;
   void mouseUp( MouseEvent event ) override;
+  // gets the ending time score
   size_t GetScore();
+  // converts milliseconds to string that displays time in standard format
   std::string ConvertTime(size_t ms);
   void button();
   void DrawGameOver();

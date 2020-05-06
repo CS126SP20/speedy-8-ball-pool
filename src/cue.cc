@@ -10,6 +10,7 @@ using namespace cinder;
 using namespace cinder::gl;
 
 namespace myapp {
+
     Cue::Cue(BodyRef body, cinder::gl::TextureRef texture, vec2 pos)
             : Body(body, texture, pos)
     {
@@ -22,7 +23,7 @@ namespace myapp {
         b2Vec2 p = Box2DUtility::pointsToMeters(b2Vec2(pos.x, pos.y));
         body_->SetTransform( p, 0);
         pos_ = pos;
-        hit = false;
+        hit_ = false;
     }
     float Cue::CalculateAngle(vec2 pos1, vec2 pos2) {
         b2Vec2 p1 = Box2DUtility::pointsToMeters(b2Vec2(pos1.x, pos1.y));
@@ -39,13 +40,13 @@ namespace myapp {
 
     }
     void Cue::IncreasePower() {
-        if (power_ <= 50)
-            power_ += 5;
+        if (power_ <= kMaxPower)
+            power_ += kPowerIncrement;
     }
 
     void Cue::DecreasePower() {
-        if (power_ >= 10)
-            power_ -= 5;
+        if (power_ >= kMinPower)
+            power_ -= kPowerIncrement;
     }
 
     void Cue::draw() {
@@ -57,7 +58,6 @@ namespace myapp {
         gl::ScopedModelMatrix modelScope;
         gl::translate( pos );
         gl::rotate( t );
-
         gl::draw(texture_, destRect);
 
     }
@@ -67,11 +67,12 @@ namespace myapp {
     }
 
     void Cue::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
-        //body_->SetLinearVelocity(b2Vec2(0, 0));
         auto dir = -1;
         body_->SetLinearVelocity(b2Vec2(power_*cosf(angle_), power_*sinf(angle_)));
+        // set the ball's velocity to the same as cue
         ball->GetBody()->SetLinearVelocity(b2Vec2(power_*dir*cosf(angle_), power_*dir*sinf(angle_)));
-        hit = true;
+        // set hit to true after cue collides with ball
+        hit_ = true;
 
     }
 }

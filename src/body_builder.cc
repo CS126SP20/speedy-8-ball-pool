@@ -15,18 +15,18 @@ using namespace cinder;
 namespace myapp {
     BodyRef BodyBuilder::makeBodyShared( b2World *world, const b2BodyDef &bodyDef )
     {
-        return BodyRef( world->CreateBody( &bodyDef ), [world]( b2Body *body ) { /*world->DestroyBody( body );*/ } );
+        return BodyRef( world->CreateBody( &bodyDef ), [world]( b2Body *body ) {} );
     }
     BodyBuilder::BodyBuilder(b2World * world) : world_(world)
     {}
 
-    std::vector<std::shared_ptr<Ball>> BodyBuilder::SetBalls(double radius) {
+    std::vector<std::shared_ptr<Ball>> BodyBuilder::CreateBalls(double radius) {
         std::vector<std::shared_ptr<Ball>> balls_;
 
-        // set rest of balls
+        // creates all the balls in positions in them initial triangular set up
         int cur = 1;
         double px = 600.0;
-        double py = app::getWindowHeight()/2 - 4*radius;
+        double py = (float)app::getWindowHeight()/2 - 4*radius;
         for (int i = 5; i > 0; --i)
         {
             for (int j = 0; j < i; ++j) {
@@ -37,7 +37,6 @@ namespace myapp {
                 std::string ball_file = "ball" + std::to_string(cur) + ".png";
                 auto img = cinder::loadImage(cinder::app::loadAsset(ball_file));
                 gl::TextureRef texture = cinder::gl::Texture2d::create(img);
-
                 vec2 pos = Box2DUtility::pointsToMeters(pos_pt);
                 b2body.position.Set(pos.x, pos.y);
                 b2body.linearVelocity = b2Vec2(0, 0);
@@ -58,13 +57,12 @@ namespace myapp {
                 balls_.push_back(ball);
                 cur++;
             }
-
             px -= radius * std::sqrt(3);
             py += radius;
         }
         return balls_;
     }
-    std::shared_ptr<Ball> BodyBuilder::SetCueBall() {
+    std::shared_ptr<Ball> BodyBuilder::CreateCueBall() {
         b2BodyDef b2body;
         b2body.type = b2_dynamicBody;
         std::string ball_file = "ball" + std::to_string(0) + ".png";
@@ -92,7 +90,7 @@ namespace myapp {
         cue_ball->setId(0);
         return cue_ball;
     }
-    std::shared_ptr<Cue> BodyBuilder::SetCue() {
+    std::shared_ptr<Cue> BodyBuilder::CreateCue() {
         auto img = cinder::loadImage(cinder::app::loadAsset("cue.png"));
         gl::TextureRef texture = cinder::gl::Texture2d::create(img);
 
@@ -101,12 +99,10 @@ namespace myapp {
         b2body1.type = b2_kinematicBody;
         vec2 pos_pt(200, 150);
         auto pos = Box2DUtility::pointsToMeters(pos_pt);
-
         b2body1.position.Set(pos.x, pos.y);
         b2body1.linearVelocity = b2Vec2(0, 0);
 
         auto body1 = makeBodyShared(world_, b2body1);
-
         b2CircleShape shape0;
         shape0.m_radius = 0.001f;
         b2FixtureDef fixture0;
@@ -118,7 +114,7 @@ namespace myapp {
         auto cue_ = std::shared_ptr<Cue>(new Cue(body1, texture, pos));
         return cue_;
     }
-    std::shared_ptr<Table> BodyBuilder::SetTable() {
+    std::shared_ptr<Table> BodyBuilder::CreateTable() {
         auto img = cinder::loadImage(cinder::app::loadAsset("table.png"));
         gl::TextureRef texture = cinder::gl::Texture2d::create(img);
         b2BodyDef body_table;
@@ -141,10 +137,10 @@ namespace myapp {
         table_->SetPockets();
         return table_;
     }
-    std::vector<std::shared_ptr<Wall>> BodyBuilder::SetWalls() {
+    std::vector<std::shared_ptr<Wall>> BodyBuilder::CreateWalls() {
         std::vector<std::shared_ptr<Wall>> walls;
         vec2 center_meters = Box2DUtility::pointsToMeters( vec2( app::getWindowCenter() ) );
-        float inset = Box2DUtility::pointsToMeters(app::getWindowWidth() - 85);
+        float inset = Box2DUtility::pointsToMeters((float)app::getWindowWidth() - 85);
         vec2 size( center_meters.x - inset, center_meters.y - inset );
         float posx = inset;
         float posy = center_meters.y;
@@ -153,18 +149,18 @@ namespace myapp {
         auto wall1 = CreateWall(posx, posy, width, height);
         walls.push_back(wall1);
 
-        float posx2 = Box2DUtility::pointsToMeters(app::getWindowWidth() - 715);
+        float posx2 = Box2DUtility::pointsToMeters((float)app::getWindowWidth() - 715);
         auto wall2 = CreateWall(posx2, posy, width, height);
         walls.push_back(wall2);
 
-        float top = Box2DUtility::pointsToMeters(app::getWindowHeight() - 225);
+        float top = Box2DUtility::pointsToMeters((float)app::getWindowHeight() - 225);
         float posx3 = center_meters.x;
         b2Vec2 width1 = b2Vec2( - size.x, 0);
         b2Vec2 height1 = b2Vec2( size.x, 0 );
         auto wall3 = CreateWall(posx3, top, width1, height1);
         walls.push_back(wall3);
 
-        float bottom = Box2DUtility::pointsToMeters(app::getWindowHeight() - 530);
+        float bottom = Box2DUtility::pointsToMeters((float)app::getWindowHeight() - 530);
         auto wall4 = CreateWall(posx3, bottom, width1, height1);
         walls.push_back(wall4);
         return walls;

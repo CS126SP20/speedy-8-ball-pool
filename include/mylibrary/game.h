@@ -21,32 +21,33 @@ class Cue;
 class Table;
 using namespace cinder;
 namespace myapp {
+    /**
+     * Game state class to track current state
+     */
     enum class GameState {
         kLogin,
         kPlaying,
         kFoul,
         kGameOver,
     };
-
+/**
+ * Main Game class
+ */
     class Game : public b2ContactListener {
-
     public:
-        virtual ~Game();
-        typedef std::vector<std::shared_ptr<Wall> >		WallContainerT;
-        typedef std::vector<std::shared_ptr<Ball> >		BallContainerT;
-        b2World* getWorld() const		{ return world_.get(); }
-        const BallContainerT& getBalls() const	{ return balls_; }
-        void HandleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint);
-        void HandleBallCollision(Ball *ball_, Body *body, const vec2 &contactPoint);
-        void HandleWallCollision(Wall *wall, Body *body, const vec2 &contactPoint);
-        void BeginContact( b2Contact* contact );
-        void setup();
-        void draw();
-        void update();
+        ~Game() override;
+        // sets up the world and all the bodies
+        void Setup();
+        // draws all the bodies
+        void Draw();
+        // updates the game state and body visibility
+        void Update();
+        // calls the cue hit
         void CueHit();
+        // checks when all the balls are hit in
         bool GameOver();
+        // set the position of the cue ball if cue ball gets hit in
         void SetCueBall(const vec2& pos);
-        void DrawPowerBar();
         std::shared_ptr<Cue> cue_;
         GameState GetState() {return state_;}
         void SetGameState(GameState state) {state_ = state;}
@@ -56,13 +57,19 @@ namespace myapp {
         std::shared_ptr<Ball> cue_ball;
         std::vector<std::shared_ptr<Wall>> walls_;
         std::unique_ptr<b2World> world_;
-        float mLastStepTime, mCurrentDecent;
-        bool IsOver_;
+        float mLastStepTime;
         GameState state_;
         audio::VoiceRef ball_sound_;
         audio::VoiceRef cue_sound_;
         audio::VoiceRef wall_sound_;
         audio::VoiceRef pocket_sound_;
+
+        void BeginContact( b2Contact* contact ) override;
+        void HandleCueCollision(Cue *cue, Body *body, const vec2 &contactPoint);
+        void HandleBallCollision(Ball *ball_, Body *body, const vec2 &contactPoint);
+        void HandleWallCollision(Wall *wall, Body *body, const vec2 &contactPoint);
+        void DrawPowerBar();
+
 
     };
 }

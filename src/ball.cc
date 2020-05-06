@@ -13,6 +13,7 @@
 using namespace cinder;
 
 namespace myapp {
+
     Ball::Ball(BodyRef body, cinder::gl::TextureRef texture, vec2 pos, float radius)
         : radius_(radius), Body(body, texture, pos)
     {
@@ -25,7 +26,6 @@ namespace myapp {
         body_->SetLinearVelocity(b2Vec2(0, 0));
         body_->SetAngularVelocity(0.0);
         b2Vec2 p = Box2DUtility::pointsToMeters(b2Vec2(pos.x, pos.y));
-        //auto y = Box2DUtility::pointsToMeters(pos.y);
         body_->SetTransform( p, 0);
         pos_ = pos;
         is_visible = true;
@@ -34,7 +34,6 @@ namespace myapp {
     vec2 Ball::getPos() const
     {
         return vec2( body_->GetPosition().x, body_->GetPosition().y );
-        //return pos_;
     }
     void Ball::setId(int id) {
         id_ = id;
@@ -46,7 +45,6 @@ namespace myapp {
             Rectf imageDest(-radius_-2, -radius_-2, radius_+2, radius_+2);
 
             float t = body_->GetAngle();
-
             gl::ScopedModelMatrix modelScope;
             gl::translate(pos);
             gl::rotate( t );

@@ -1,21 +1,14 @@
 // Copyright (c) 2020 [Your Name]. All rights reserved.
 
 #include "my_app.h"
-
 #include <cinder/app/App.h>
 #include <cinder/Font.h>
 #include <cinder/Text.h>
 #include <cinder/Vector.h>
 #include <cinder/gl/draw.h>
 #include <cinder/gl/gl.h>
-#include <cinder/gl/draw.h>
 #include <cinder/audio/Source.h>
-#include <cinder/audio/Utilities.h>
-#include <cinder/audio/audio.h>
-#include "cinder/app/RendererGl.h"
 #include "cinder/Log.h"
-#include <cinder/Font.h>
-#include <cinder/Text.h>
 #include <cinder/params/Params.h>
 
 
@@ -44,17 +37,22 @@ MyApp::MyApp()
     {}
 
 void MyApp::setup() {
-    game_.setup();
+    game_.Setup();
     mPrintFps = false;
+    // create parameters
     mParams = params::InterfaceGl::create( getWindow(), "Welcome To 8 Ball Pool!", toPixels( ivec2( 400, 100 ) ) );
     vec2 center = app::getWindowCenter();
-    mParams->setPosition(ivec2(center.x - (mParams->getWidth() / 2), 50));
+    mParams->setPosition(ivec2(center.x - ((float)mParams->getWidth() / 2), 50));
+    // add parameter username
     mParams->addParam( "Enter Username:", &player_name_);
+    mParams->addSeparator();
+    // add button to start game
     mParams->addButton( "Click to start game", std::bind( &MyApp::button, this ) );
 
 }
 void MyApp::button()
 {
+    // if start button is clicked, change game state to playing and start timer
     game_.SetGameState(GameState::kPlaying);
     mParams->clear();
     start_time_ = system_clock::now();
@@ -74,7 +72,7 @@ void PrintText(const string& text, const C& color, const cinder::ivec2& size,
             .text(text);
 
     const auto box_size = box.getSize();
-    const cinder::vec2 locp = {loc.x - box_size.x / 2, loc.y - box_size.y / 2};
+    const cinder::vec2 locp = {loc.x - (float)box_size.x / 2, loc.y - (float)box_size.y / 2};
     const auto surface = box.render();
     const auto texture = cinder::gl::Texture::create(surface);
     cinder::gl::draw(texture, locp);
@@ -82,10 +80,9 @@ void PrintText(const string& text, const C& color, const cinder::ivec2& size,
 std::string MyApp::ConvertTime(size_t ms) {
     using namespace std::chrono;
 
-    int secs = ms / 1000;
+    unsigned int secs = ms / 1000;
     ms %= 1000;
-
-    int mins = secs / 60;
+    unsigned int mins = secs / 60;
     secs %= 60;
 
     std::string seconds;
@@ -103,8 +100,8 @@ std::string MyApp::ConvertTime(size_t ms) {
     return minutes + ":" + seconds;
 }
 size_t MyApp::GetScore() {
-    using namespace std::chrono;
 
+    using namespace std::chrono;
     const auto current_time = system_clock::now();
     auto ms = current_time - start_time_;
     size_t duration  = duration_cast<milliseconds>(ms).count();
@@ -116,11 +113,13 @@ void MyApp::update() {
             console() << getAverageFps() << std::endl;
     }
     else if (game_.GetState() == GameState::kPlaying || game_.GetState() == GameState::kFoul) {
-        game_.update();
+        game_.Update();
     }
     else if (game_.GetState() == GameState::kGameOver) {
         if (top_players_.empty()) {
-            scoreboard_.AddScoreToScoreBoard({player_name_, GetScore()});
+            if (game_.GameOver()) {
+                scoreboard_.AddScoreToScoreBoard({player_name_, GetScore()});
+            }
             top_players_ = scoreboard_.RetrieveHighScores(kLimit);
             Player player(player_name_, GetScore());
             top_scores_ = scoreboard_.RetrieveHighScores(player, kLimit);
@@ -141,28 +140,19 @@ void MyApp::DrawGameOver() {
     const cinder::ivec2 size = {500, 50};
     const Color color = Color::white();
 
-    size_t row = 1;
+    float row = 1;
     PrintText("Game Over :(", color, size, center);
     PrintText("All Player Top Scores", color, size, {center.x, center.y + 50});
     for (const myapp::Player& player : top_players_) {
         std::stringstream ss;
-        if (game_.GameOver()) {
-            ss << player.name << " - " << ConvertTime(player.score);
-        } else {
-            ss << player.name << " - " << ConvertTime(player.score) + " (Quit)";
-        }
+        ss << player.name << " - " << ConvertTime(player.score);
         PrintText(ss.str(), color, size, {center.x, center.y + (++row) * 50});
     }
     PrintText("Current Player Top Scores", color, size, {center.x, 100});
     row = 0;
     for (const myapp::Player& player : top_scores_) {
         std::stringstream ss2;
-        if (game_.GameOver()) {
-            ss2 << player.name << " - " << ConvertTime(player.score);
-        } else {
-            ss2 << player.name << " - " << ConvertTime(player.score) + " (Quit)";
-        }
-
+        ss2 << player.name << " - " << ConvertTime(player.score);
         PrintText(ss2.str(), color, size, {center.x, 100 + (++row) * 50});
     }
     printed_game_over_ = true;
@@ -173,19 +163,18 @@ void MyApp::draw() {
         auto img = cinder::loadImage(cinder::app::loadAsset("background.png"));
         gl::TextureRef texture = cinder::gl::Texture2d::create(img);
         gl::draw(texture, vec2(0, 0));
-        //gl::clear( Color::gray( 0.1f ) );
         mParams->draw();
     }
     else if (game_.GetState() == GameState::kPlaying || game_.GetState() == GameState::kFoul ) {
         cinder::gl::clear();
         gl::enableAlphaBlending();
-        game_.draw();
+        game_.Draw();
         const cinder::vec2 center = vec2(100, 100);
         const cinder::ivec2 size = {500, 50};
         const Color color = Color::white();
         PrintText(ConvertTime(GetScore()), color, size, center);
-    } else if (game_.GetState() == GameState::kGameOver) {
 
+    } else if (game_.GetState() == GameState::kGameOver) {
         if (!printed_game_over_) cinder::gl::clear(Color(0, 0, 0));
         DrawGameOver();
     }
@@ -207,6 +196,7 @@ void MyApp::mouseDrag( MouseEvent event )
     if (!tracking_mode) {
         return;
     }
+    // set direction of cue based on mouse position
     game_.cue_->SetDirection(event.getPos());
 }
 

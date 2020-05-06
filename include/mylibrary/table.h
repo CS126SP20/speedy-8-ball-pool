@@ -13,28 +13,32 @@
 
 using namespace cinder;
 namespace myapp {
+    /**
+     * Wall struct that simulates the borders of the table
+     */
     struct Wall : Body {
         Wall(BodyRef body);
         void handleCollision(Ball *ball, const ci::vec2 &contactPoint ) override;
         void draw() override;
         float width_;
     };
+
+    /**
+     * Table class
+     */
     class Table : Body {
-    private:
 
-    public:
-        Table(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
-        std::vector<vec2> pockets_;
-        void handleCollision(Ball *ball, const ci::vec2 &contactPoint );
-        //cinder::gl::Texture2dRef texture_;
-        void SetPockets();
-        //Table();
-        void draw();
-
-        bool is_pocketed(std::shared_ptr<Ball> b);
-
-        double  getWidth() const noexcept {return texture_->getWidth(); }
-        double getHeight() const noexcept {return app::getWindowHeight();}
+        public:
+            Table(BodyRef body, cinder::gl::TextureRef texture_, vec2 pos);
+            void handleCollision(Ball *ball, const ci::vec2 &contactPoint ) override;
+            // sets the positions of the pockets on table
+            void SetPockets();
+            //Table();
+            void draw() override;
+            // checks if a ball has been pocketed
+            bool is_pocketed(std::shared_ptr<Ball> b);
+        private:
+            std::vector<vec2> pockets_;
     };
 }
 
