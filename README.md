@@ -8,7 +8,7 @@ layout.
 
 **Author**: Lily Pan - [`lpan8@illinois.edu`](mailto:lpan8@illinois.edu)
 
-# Dependencies
+### Dependencies
   - [MSVC 2015+](https://visualstudio.microsoft.com/)
   - [cmake](https://cmake.org/)
   - [cinder](https://libcinder.org/)
@@ -20,6 +20,29 @@ layout.
 #### Visual Studio
 
 - [Visual Studio 2015+](https://visualstudio.microsoft.com/)
+
+#### MinGW
+- [mingw-w64](https://mingw-w64.org)
+
+## Controls
+
+### Game
+
+#### Keyboard
+
+  - Instructions: 
+  1.) Enter username
+  2.) Click button to start game
+  3.) Hit in all the balls as fast as possible
+    - Click down to place cue, drag to rotate
+    - Release to hit cue
+
+| Key       | Action                                                      |
+|---------- |-------------------------------------------------------------|
+| `up`      | Increase power                                              |
+| `down`    | Decrease power                                              |
+| `w/SPACE` | Stop cue tracking (to replace cue                           |
+| `ESC`     | Quit the game                                               |
 
   
   
