@@ -14,6 +14,17 @@
 using namespace cinder;
 using std::string;
 
+// constants
+float kPowerBarX1 = 100;
+float kPowerBarY1 = 600;
+float kPowerBarX2 = 485;
+float kPowerBarY2 = 620;
+float kPowerMultiplicity = 7;
+std::string kCueSoundFile = "cue.wav";
+std::string kBallSoundFile = "poolballhit.wav";
+std::string kWallSoundFile = "wall.wav";
+std::string kPocketSoundFIle = "pocket.wav";
+
 namespace myapp {
     void Game::Setup() {
         // initial game state
@@ -33,13 +44,13 @@ namespace myapp {
         cue_ = builder.CreateCue();
 
         // creates all the audio refs
-        audio::SourceFileRef sourceFile = audio::load( app::loadAsset( "cue.wav" ) );
+        audio::SourceFileRef sourceFile = audio::load( app::loadAsset( kCueSoundFile ) );
         cue_sound_ = audio::Voice::create( sourceFile );
-        audio::SourceFileRef sourceFile2 = audio::load( app::loadAsset( "poolballhit.wav" ) );
+        audio::SourceFileRef sourceFile2 = audio::load( app::loadAsset( kBallSoundFile ) );
         ball_sound_ = audio::Voice::create( sourceFile2 );
-        audio::SourceFileRef sourceFile3 = audio::load( app::loadAsset( "wall.wav" ) );
+        audio::SourceFileRef sourceFile3 = audio::load( app::loadAsset( kWallSoundFile ) );
         wall_sound_ = audio::Voice::create( sourceFile3 );
-        audio::SourceFileRef sourceFile4 = audio::load( app::loadAsset( "pocket.wav" ) );
+        audio::SourceFileRef sourceFile4 = audio::load( app::loadAsset( kPocketSoundFIle ) );
         pocket_sound_ = audio::Voice::create( sourceFile4 );
 
     }
@@ -125,9 +136,10 @@ namespace myapp {
         return over;
     }
     void Game::DrawPowerBar() {
-        cinder::gl::drawStrokedRect(Rectf(100, 600, 485, 620));
+        cinder::gl::drawStrokedRect(Rectf(kPowerBarX1, kPowerBarY1, kPowerBarX2, kPowerBarY2));
         // draws size based on power of cue
-        cinder::gl::drawSolidRect(Rectf(100, 600, 100 + cue_->GetPower()*7, 620));
+        cinder::gl::drawSolidRect(Rectf(kPowerBarX1, kPowerBarY1,
+                kPowerBarX1 + cue_->GetPower()*kPowerMultiplicity, kPowerBarY2));
     }
     void Game::Draw() {
         DrawPowerBar();

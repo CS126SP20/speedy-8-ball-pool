@@ -11,8 +11,6 @@
 #include "cinder/Log.h"
 #include <cinder/params/Params.h>
 
-
-
 namespace myapp {
 
 using cinder::Color;
@@ -31,6 +29,13 @@ using namespace ci;
 using namespace ci::app;
 const char kDbPath[] = "pool.db";
 
+std::string kWelcomeString = "Welcome To 8 Ball Pool!";
+std::string kUsernameString = "Please Enter a Username:";
+std::string kButtonText = "Click to start game";
+std::string kGameOverString = "Game Over :(";
+std::string kTopPlayers = "All Player Top Scores";
+std::string kTopScores = "Current Player Top Scores";
+
 MyApp::MyApp()
     : scoreboard_{cinder::app::getAssetPath(kDbPath).string()},
       printed_game_over_{false}
@@ -40,14 +45,14 @@ void MyApp::setup() {
     game_.Setup();
     mPrintFps = false;
     // create parameters
-    mParams = params::InterfaceGl::create( getWindow(), "Welcome To 8 Ball Pool!", toPixels( ivec2( 400, 100 ) ) );
+    mParams = params::InterfaceGl::create( getWindow(), kWelcomeString, toPixels( ivec2( 400, 100 ) ) );
     vec2 center = app::getWindowCenter();
     mParams->setPosition(ivec2(center.x - ((float)mParams->getWidth() / 2), 50));
     // add parameter username
-    mParams->addParam( "Enter Username:", &player_name_);
+    mParams->addParam( kUsernameString, &player_name_);
     mParams->addSeparator();
     // add button to start game
-    mParams->addButton( "Click to start game", std::bind( &MyApp::button, this ) );
+    mParams->addButton( kButtonText, std::bind( &MyApp::button, this ) );
 
 }
 void MyApp::button()
@@ -141,14 +146,14 @@ void MyApp::DrawGameOver() {
     const Color color = Color::white();
 
     float row = 1;
-    PrintText("Game Over :(", color, size, center);
-    PrintText("All Player Top Scores", color, size, {center.x, center.y + 50});
+    PrintText(kGameOverString, color, size, center);
+    PrintText(kTopPlayers, color, size, {center.x, center.y + 50});
     for (const myapp::Player& player : top_players_) {
         std::stringstream ss;
         ss << player.name << " - " << ConvertTime(player.score);
         PrintText(ss.str(), color, size, {center.x, center.y + (++row) * 50});
     }
-    PrintText("Current Player Top Scores", color, size, {center.x, 100});
+    PrintText(kTopScores, color, size, {center.x, 100});
     row = 0;
     for (const myapp::Player& player : top_scores_) {
         std::stringstream ss2;

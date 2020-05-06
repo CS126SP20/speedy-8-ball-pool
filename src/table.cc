@@ -10,6 +10,11 @@
 
 using namespace cinder;
 
+float kRightPocketInset = 100;
+float kLeftPocketInset = 710;
+float kTopPocketInset = 230;
+float kBottomPocketInset = 525;
+
 namespace myapp {
     Wall::Wall(BodyRef body)
             : Body(body, nullptr, vec2(0, 0))
@@ -39,12 +44,12 @@ namespace myapp {
         cinder::gl::draw(texture_, fit);
     }
     void Table::SetPockets() {
-        // hard-coded numbers of positions of pockets
+
         auto posX = (app::getWindowWidth() - texture_->getWidth()) / 2;
-        float right = (float)app::getWindowWidth() - 100.0f;
-        float left = (float)app::getWindowWidth() - 710.0f;
-        float top = (float)app::getWindowHeight() - 230.0f;
-        float bottom = (float)app::getWindowHeight() - 525.0f;
+        float right = (float)app::getWindowWidth() - kRightPocketInset;
+        float left = (float)app::getWindowWidth() - kLeftPocketInset;
+        float top = (float)app::getWindowHeight() - kTopPocketInset;
+        float bottom = (float)app::getWindowHeight() - kBottomPocketInset;
 
         pockets_.push_back(vec2(left, bottom)); // bottom left
         pockets_.push_back(vec2(left, top)); // top left

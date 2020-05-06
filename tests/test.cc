@@ -25,12 +25,12 @@ TEST_CASE("Random sanity test", "[random]") {
 /*
 TEST_CASE("Cue calculate angle test", "[angle]") {
     b2Vec2 gravity( 0, 0 );
-    std::unique_ptr<b2World> world_;
-    world_.reset( new b2World( gravity ) );
+    b2World *world_;
+   // world_.reset( new b2World( gravity ) );
     //world_->SetContactListener( this );
-    BodyBuilder builder(world_.get());
+    BodyBuilder builder(world_);
 
-    vec2 center = app::getWindowCenter();
+    vec2 center = vec2(0, 0);
     b2BodyDef b2body1;
     b2body1.type = b2_kinematicBody;
     vec2 pos_pt(200, 150);
@@ -47,8 +47,8 @@ TEST_CASE("Cue calculate angle test", "[angle]") {
     fixture0.density = 1.0f;
     fixture0.friction = 1.0f;
     fixture0.restitution = 0.4f;
-    body1->CreateFixture(&fixture0);
-    auto cue = std::shared_ptr<Cue>(new Cue(body1, NULL, pos));
+    //body1->CreateFixture(&fixture0);
+    std::shared_ptr<myapp::Cue> cue = std::shared_ptr<myapp::Cue>(new myapp::Cue(body1, nullptr, pos));
 
     vec2 pos1(0, 0);
     vec2 pos2(1, 1);

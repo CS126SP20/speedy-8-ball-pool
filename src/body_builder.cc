@@ -12,6 +12,11 @@
 
 using namespace cinder;
 
+float kLeftWallInset = 85;
+float kRightWallInset = 715;
+float kTopWallInset = 225;
+float kBottomWallInset = 530;
+
 namespace myapp {
     BodyRef BodyBuilder::makeBodyShared( b2World *world, const b2BodyDef &bodyDef )
     {
@@ -140,7 +145,7 @@ namespace myapp {
     std::vector<std::shared_ptr<Wall>> BodyBuilder::CreateWalls() {
         std::vector<std::shared_ptr<Wall>> walls;
         vec2 center_meters = Box2DUtility::pointsToMeters( vec2( app::getWindowCenter() ) );
-        float inset = Box2DUtility::pointsToMeters((float)app::getWindowWidth() - 85);
+        float inset = Box2DUtility::pointsToMeters((float)app::getWindowWidth() - kLeftWallInset);
         vec2 size( center_meters.x - inset, center_meters.y - inset );
         float posx = inset;
         float posy = center_meters.y;
@@ -149,18 +154,18 @@ namespace myapp {
         auto wall1 = CreateWall(posx, posy, width, height);
         walls.push_back(wall1);
 
-        float posx2 = Box2DUtility::pointsToMeters((float)app::getWindowWidth() - 715);
+        float posx2 = Box2DUtility::pointsToMeters((float)app::getWindowWidth() - kRightWallInset);
         auto wall2 = CreateWall(posx2, posy, width, height);
         walls.push_back(wall2);
 
-        float top = Box2DUtility::pointsToMeters((float)app::getWindowHeight() - 225);
+        float top = Box2DUtility::pointsToMeters((float)app::getWindowHeight() - kTopWallInset);
         float posx3 = center_meters.x;
         b2Vec2 width1 = b2Vec2( - size.x, 0);
         b2Vec2 height1 = b2Vec2( size.x, 0 );
         auto wall3 = CreateWall(posx3, top, width1, height1);
         walls.push_back(wall3);
 
-        float bottom = Box2DUtility::pointsToMeters((float)app::getWindowHeight() - 530);
+        float bottom = Box2DUtility::pointsToMeters((float)app::getWindowHeight() - kBottomWallInset);
         auto wall4 = CreateWall(posx3, bottom, width1, height1);
         walls.push_back(wall4);
         return walls;
