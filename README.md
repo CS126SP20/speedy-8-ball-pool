@@ -10,8 +10,8 @@ layout.
 
 ![](20200505_195707.gif)
 
-### Dependencies
-  - [MSVC 2015+](https://visualstudio.microsoft.com/)
+## Dependencies
+  - [MSVC 2017](https://visualstudio.microsoft.com/)
   - [cmake](https://cmake.org/)
   - [cinder](https://libcinder.org/)
   - [box2d](https://box2d.org/)
@@ -20,19 +20,16 @@ layout.
 ### Windows
 
 #### Visual Studio
-
-- [Visual Studio 2015+](https://visualstudio.microsoft.com/)
-
-#### MinGW
-- [mingw-w64](https://mingw-w64.org)
+- You must have Visual Studio 2017 on Microsoft Windows to build this project
+- [Visual Studio 2017](https://visualstudio.microsoft.com/)
 
 ## Controls
 
 ### Game
   - Instructions: 
-  1.) Enter username
-  2.) Click button to start game
-  3.) Hit in all the balls as fast as possible
+  1. Enter username
+  2. Click button to start game
+  3. Hit in all the balls as fast as possible
     - Click down to place cue, drag to rotate
     - Release to hit cue
 #### Keyboard
