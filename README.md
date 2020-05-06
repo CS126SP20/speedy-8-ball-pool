@@ -39,7 +39,7 @@ layout.
 |---------- |-------------------------------------------------------------|
 | `up`      | Increase power                                              |
 | `down`    | Decrease power                                              |
-| `w/SPACE` | Stop cue tracking (to replace cue                           |
+| `w/SPACE` | Stop cue tracking                                           |
 | `ESC`     | Quit the game                                               |
 
   
