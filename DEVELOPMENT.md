@@ -46,5 +46,5 @@
 - **5/5/2020** Added database implementation to display current user best scores and all user best scores
   - still need to added tests
   
- - **5/6/2020** Removed hardcoded numbers and string and made them constants
+- **5/6/2020** Removed hardcoded numbers and string and made them constants
   - still struggling with tests
