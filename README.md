@@ -30,8 +30,8 @@ layout.
   1. Enter username
   2. Click button to start game
   3. Hit in all the balls as fast as possible
-    - Click down to place cue, drag to rotate
-    - Release to hit cue
+    1. Click down to place cue, drag to rotate
+    1. Release to hit cue
 #### Keyboard
 
 | Key       | Action                                                      |
