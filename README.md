@@ -8,7 +8,7 @@ layout.
 
 **Author**: Lily Pan - [`lpan8@illinois.edu`](mailto:lpan8@illinois.edu)
 
-![](C:\Users\lilyl\OneDrive\Documents\Apowersoft\Apowersoft Online Screen Recorder\20200505_195707.gif)
+![](20200505_195707.gif)
 
 ### Dependencies
   - [MSVC 2015+](https://visualstudio.microsoft.com/)
