@@ -46,5 +46,5 @@
 - **5/5/2020** Added database implementation to display current user best scores and all user best scores
   - still need to added tests
   
-- **5/6/2020** Removed hardcoded numbers and string and made them constants
-  - still struggling with tests
+- **5/6/2020** Removed hardcoded numbers and strings and made them constants and wrote tests
+  - Future improvements: Make the two player version of solid vs stripes with all the rules, added line extended from cue to help with aiming
