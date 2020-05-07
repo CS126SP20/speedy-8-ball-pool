@@ -37,6 +37,9 @@ namespace myapp {
             void draw() override;
             // checks if a ball has been pocketed
             bool is_pocketed(std::shared_ptr<Ball> b);
+            std::vector<vec2> GetPockets() {return pockets_;}
+            // for testing purposes
+            void TestPockets(std::vector<vec2> pockets) {pockets_ = pockets;}
         private:
             std::vector<vec2> pockets_;
     };

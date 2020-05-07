@@ -35,7 +35,6 @@ namespace myapp {
  */
     class Game : public b2ContactListener {
     public:
-        ~Game() override;
         // sets up the world and all the bodies
         void Setup();
         // draws all the bodies
@@ -51,6 +50,8 @@ namespace myapp {
         std::shared_ptr<Cue> cue_;
         GameState GetState() {return state_;}
         void SetGameState(GameState state) {state_ = state;}
+        // for testing
+        void SetBalls(std::vector<std::shared_ptr<Ball>> balls) {balls_ = balls;}
     private:
         std::shared_ptr<Table> table_;
         std::vector<std::shared_ptr<Ball>> balls_;
@@ -69,8 +70,6 @@ namespace myapp {
         void HandleBallCollision(Ball *ball_, Body *body, const vec2 &contactPoint);
         void HandleWallCollision(Wall *wall, Body *body, const vec2 &contactPoint);
         void DrawPowerBar();
-
-
     };
 }
 #endif //FINALPROJECT_GAME_H

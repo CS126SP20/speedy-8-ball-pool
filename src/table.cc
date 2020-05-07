@@ -19,7 +19,7 @@ namespace myapp {
     Wall::Wall(BodyRef body)
             : Body(body, nullptr, vec2(0, 0))
     {
-        body_->SetUserData(this);
+
     }
     void Wall::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
 
@@ -35,7 +35,7 @@ namespace myapp {
     Table::Table(myapp::BodyRef body, cinder::gl::TextureRef texture_, vec2 pos)
         : Body(body, texture_, pos)
         {
-            body_->SetUserData(this);
+
     }
     void Table::draw() {
         cinder::Area area = texture_->getBounds();
@@ -44,8 +44,14 @@ namespace myapp {
         cinder::gl::draw(texture_, fit);
     }
     void Table::SetPockets() {
+        float width;
+        if (texture_) {
+            width = texture_->getWidth() / 2;
+        } else {
+            width = 0;
+        }
 
-        auto posX = (app::getWindowWidth() - texture_->getWidth()) / 2;
+        auto posX = ((float)app::getWindowWidth()/2) - width;
         float right = (float)app::getWindowWidth() - kRightPocketInset;
         float left = (float)app::getWindowWidth() - kLeftPocketInset;
         float top = (float)app::getWindowHeight() - kTopPocketInset;
@@ -55,8 +61,8 @@ namespace myapp {
         pockets_.push_back(vec2(left, top)); // top left
         pockets_.push_back(vec2( right, bottom + 10)); // bottom right
         pockets_.push_back(vec2( right, top)); // top right
-        pockets_.push_back(vec2(posX + (texture_->getWidth()/2) - 10, bottom)); // bottom middle
-        pockets_.push_back(vec2(posX + (texture_->getWidth()/2) - 10, top)); // top middle
+        pockets_.push_back(vec2(posX + width - 10, bottom)); // bottom middle
+        pockets_.push_back(vec2(posX + width - 10, top)); // top middle
     }
     bool Table::is_pocketed(std::shared_ptr<Ball> b)
     {

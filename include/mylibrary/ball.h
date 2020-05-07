@@ -24,7 +24,6 @@ namespace myapp {
         bool is_visible = true;
         // the number of the ball
         int id_ = 0;
-
         void draw() override;
         //void destroy() {body_->SetActive(false);}
         void handleCollision(Ball *ball, const ci::vec2 &contactPoint ) override;
@@ -35,6 +34,8 @@ namespace myapp {
         float getRadius() {return radius_;}
         void setId(int id);
 
+        // for testing purposes
+        void SetVisibility(bool visible) {is_visible = visible;}
     private:
         float radius_;
     };

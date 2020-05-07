@@ -16,10 +16,7 @@ namespace myapp {
 
     Ball::Ball(BodyRef body, cinder::gl::TextureRef texture, vec2 pos, float radius)
         : radius_(radius), Body(body, texture, pos)
-    {
-        body_->SetUserData(this);
-    }
-
+    {}
 
     void Ball::SetPosition( const ci::vec2 &pos )
     {
@@ -33,7 +30,11 @@ namespace myapp {
 
     vec2 Ball::getPos() const
     {
-        return vec2( body_->GetPosition().x, body_->GetPosition().y );
+        if (body_) {
+            return vec2( body_->GetPosition().x, body_->GetPosition().y );
+        } else {
+            return vec2(Box2DUtility::pointsToMeters(pos_.x), Box2DUtility::pointsToMeters(pos_.y));
+        }
     }
     void Ball::setId(int id) {
         id_ = id;
@@ -52,7 +53,7 @@ namespace myapp {
         }
 
     }
-    void Ball::handleCollision(Ball *ball, const ci::vec2 &contactPoint ) {
-    }
+    void Ball::handleCollision(Ball *ball, const ci::vec2 &contactPoint )
+    {}
 
 }

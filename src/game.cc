@@ -89,14 +89,14 @@ namespace myapp {
             HandleCueCollision(dynamic_cast<Cue *>( objectA ), objectB, contactPoint );
         else if ( typeid( *objectB ) == typeid( Cue )) {
             HandleCueCollision(dynamic_cast<Cue *>( objectB ), objectA, contactPoint );
+        }  else if ( typeid( *objectA ) == typeid( Wall )) {
+            HandleWallCollision(dynamic_cast<Wall *>( objectA ), objectB, contactPoint );
+        } else if (typeid( *objectB ) == typeid( Wall )) {
+            HandleWallCollision(dynamic_cast<Wall *>( objectB ), objectA, contactPoint );
         } else if ( typeid( *objectA ) == typeid( Ball )) {
             HandleBallCollision(dynamic_cast<Ball *>( objectA ), objectB, contactPoint );
         } else if (typeid( *objectB ) == typeid( Ball )) {
             HandleBallCollision(dynamic_cast<Ball *>( objectB ), objectA, contactPoint );
-        } else if ( typeid( *objectA ) == typeid( Wall )) {
-            HandleWallCollision(dynamic_cast<Wall *>( objectA ), objectB, contactPoint );
-        } else if (typeid( *objectB ) == typeid( Wall )) {
-            HandleWallCollision(dynamic_cast<Wall *>( objectB ), objectA, contactPoint );
         }
     }
 
@@ -177,18 +177,10 @@ namespace myapp {
             // after cue hits ball, deactivate and do not draw
             cue_->GetBody()->SetActive(false);
         }
-
         for (auto wall : walls_) {
             wall->draw();
         }
 
-    }
-    Game::~Game() {
-        b2Body* b = world_->GetBodyList();
-        while (b != nullptr) {
-            world_->DestroyBody(b);
-            b = world_->GetBodyList();
-        }
     }
 
 }

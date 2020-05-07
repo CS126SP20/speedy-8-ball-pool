@@ -13,10 +13,7 @@ namespace myapp {
 
     Cue::Cue(BodyRef body, cinder::gl::TextureRef texture, vec2 pos)
             : Body(body, texture, pos)
-    {
-        body_->SetUserData(this);
-    }
-
+    {}
     void Cue::setPosition( const ci::vec2 &pos )
     {
         body_->SetLinearVelocity(b2Vec2(0, 0));

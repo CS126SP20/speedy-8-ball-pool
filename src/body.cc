@@ -8,6 +8,7 @@ namespace myapp {
     Body::Body(myapp::BodyRef body, gl::Texture2dRef texture, vec2 pos)
         : body_(body), texture_(texture), pos_(pos)
     {
-
+        if(body_)
+            body_->SetUserData(this);
     }
 }
