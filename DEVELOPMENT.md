@@ -26,3 +26,25 @@
 
 - **4/28/2020** Added friction and mass to balls so they move more realistically and added rotation of cue
   - need to start implementing game logic
+  
+- **4/29/2020** Added rotation of cue through mouse tracking
+  - need to include power bar so that speed is controlled by user
+  
+- **5/1/2020** Added placing of cue ball it is hit in
+  - still need to add power bar
+
+- **5/2/2020** Added power bar
+  - power of cue is now controlled by user through up and down keys
+  - still need to add some game logic
+
+- **5/3/2020** Added time display to show how long it takes to win and added SQL library
+  - still need to add database usage
+  
+- **5/4/2020** Added user input of username and start screen
+  - still need to added end screen with database implementation
+ 
+- **5/5/2020** Added database implementation to display current user best scores and all user best scores
+  - still need to added tests
+  
+- **5/6/2020** Removed hardcoded numbers and strings and made them constants and wrote tests
+  - Future improvements: Make the two player version of solid vs stripes with all the rules, added line extended from cue to help with aiming
