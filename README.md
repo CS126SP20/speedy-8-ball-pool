@@ -8,7 +8,7 @@ layout.
 
 **Author**: Lily Pan - [`lpan8@illinois.edu`](mailto:lpan8@illinois.edu)
 
-![Screenshot of game in action]()
+![Screenshot of game in action](https://github.com/CS126SP20/final-project-lpan8/blob/master/pool.PNG)
 
 ## Dependencies
   - [MSVC 2017](https://visualstudio.microsoft.com/)
