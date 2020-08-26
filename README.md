@@ -8,7 +8,7 @@ layout.
 
 **Author**: Lily Pan - [`lpan8@illinois.edu`](mailto:lpan8@illinois.edu)
 
-![](20200505_195707.gif)
+![Screenshot of game in action]()
 
 ## Dependencies
   - [MSVC 2017](https://visualstudio.microsoft.com/)
